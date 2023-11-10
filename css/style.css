@@ -1,0 +1,195 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+}
+
+.header {
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.3rem 10%;
+  /* background: rgba(0, 0, 0, 0.1); */
+  background: 	#FFD700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 2rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.navbar a {
+  font-size: 1.5rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 2.5rem;
+}
+
+#check {
+  display: none;
+}
+/* 
+.icons {
+  position: absolute;
+  right: 5%;
+  font-size: 2.8rem;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+} */
+
+.section {
+  font-family: "Manrope", sans-serif;
+  font-weight: 400;
+  height: 100vh;
+  background-color: #fff;
+  display: flex;
+}
+
+.search {
+  width: 90%;
+  height: 26%;
+  background: 	#FFD700;
+  border-radius: 1rem;
+  padding-top: 3rem;
+}
+.search_bar {
+  position: relative;
+  width: 90%;
+  height: 4rem;
+  background: #fff;
+  /* margin-top: 0.7rem;
+  margin-left: 5rem; */
+  margin: auto auto 0.7rem auto;
+  border-radius: 1rem;
+  display: flex;
+}
+.search_bar .icon {
+  width: 3rem;
+  height: 3rem;
+  background: white;
+  border-radius: 60px;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.search_bar .icon i {
+  color: rgba(152, 152, 152, 0.357);
+}
+
+.search_bar input {
+  width: 90%;
+  height: auto;
+  padding-top: 0.7rem;
+  left: 5rem;
+  border: none;
+  outline: none;
+  font-size: 1.4rem;
+}
+
+.MyButton {
+  position: relative;
+  margin: auto auto 0.7rem auto;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.search button {
+  width: 8rem;
+  height: 4rem;
+  border-radius: 35px;
+  border: none;
+  background-color: rgb(223, 126, 37);
+  color: white;
+  font-weight: 700;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  text-align: center;
+  left: 50%;
+  top: 50%;
+}
+.search a {
+  text-decoration: none;
+  color: #fff;
+}
+.search button:hover {
+  background-color: transparent;
+  border: 1px solid rgb(223, 126, 37);
+}
+.search a button:hover {
+  text-decoration: none;
+  color: rgb(223, 126, 37);
+}
+/* GENERAL */
+
+/* SIDEBAR */
+.sidebar {
+  flex-basis: 50rem;
+  background-color: rgba(216, 219, 116, 0.607);
+  padding: 3rem 5rem 4rem 5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.title_bar {
+  height: 5.2rem;
+  align-self: center;
+  margin-bottom: 4rem;
+  color: #fff;
+}
+
+.copyright {
+  margin-top: auto;
+  font-size: 1.3rem;
+  text-align: center;
+  color: rgb(223, 126, 37);
+}
+
+/* MAP */
+#map {
+  flex: 1;
+  height: 100%;
+}
+
+.boutonRecentrage {
+  margin-top: 6em;
+  max-width: 34px;
+  max-height: 34px;
+  margin-left:0.8em;
+  position:absolute;
+  z-index: 500;
+  cursor: pointer;
+  border: 2px solid #00000071;
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.boutonRecentrage :hover{
+  background-color:rgba(0, 0, 0, 0.05)
+}
+
+.boutonRecentrage img{
+  width: 100%;
+  height: 100%;
+  border-radius:20px;
+}
