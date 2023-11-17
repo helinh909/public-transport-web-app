@@ -2,13 +2,9 @@ console.log('Exécution du programme carte.js');
 
 //Creation de la carte 
 maCarte = L.map('map').setView([46.148358, -1.156659], 12.5);
-const mapBoxAccessToken = 'pk.eyJ1IjoicGVkcm9kYWN0eWxlIiwiYSI6IjVmdHRmUjgifQ.Cl1waAaPYaOY9qJr14rCew';
-const mapBoxProjectId = 'pedrodactyle.hgfj5llg';
 const fondDeCarte = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 25,
-    id: mapBoxProjectId,
-    accessToken: mapBoxAccessToken,
 });
 fondDeCarte.addTo(maCarte);
 
@@ -17,7 +13,7 @@ fondDeCarte.addTo(maCarte);
 
 if(navigator.geolocation){
     let watchId = navigator.geolocation.watchPosition(obtenirPosition,error,
-    {enableHighAccuracy:true});
+    {enableHighAccuracy:true,maximumAge:0});
 }
 else{
     alert("Votre navigateur ne prend pas en compte la géolocalisation");
@@ -35,8 +31,10 @@ let maPosition = L.marker([0,0], {icon: maPositionIcon}).addTo(maCarte);
 function obtenirPosition(position){
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
+    //console.log(latitude);
+    //console.log(longitude);
     maPosition.setLatLng([latitude,longitude]);
-}
+} 
 
 function error(){
     alert("Impossible d'obtenir la localisation");
@@ -121,22 +119,33 @@ function afficherPositionsBus(reponseAjax){
     maCarte.addLayer(markersBus);
 }
 
-function calculerDistance(lat,long){
+function calculerDistance(lat,long,callback){    
     const R = 6347;
-    const a = latitude * (Math.PI /180);
     const b = lat * (Math.PI / 180);
-    const c = longitude * (Math.PI/180);
     const d = long * (Math.PI /180);
-    return a;
-    //return R* Math.acos(Math.sin(a)*Math.sin(b)+Math.cos(a)*Math.cos(b)*Math.cos(c-d));
+    let distance;
+    navigator.geolocation.getCurrentPosition((position) => {
+        const maLatitude = position.coords.latitude;
+        const maLongitude = position.coords.longitude;
+        const a = maLatitude * (Math.PI / 180);
+        const c = maLongitude * (Math.PI / 180);
+        const distance= R* Math.acos(Math.sin(a)*Math.sin(b)+Math.cos(a)*Math.cos(b)*Math.cos(c-d));
+        callback(distance,null);
+    });
 }
 
 function afficherArretsPlusProches(reponseAjax){
     const nomArret = reponseAjax.data;
+    let arretsDistance = [];
+    let count =0;
     nomArret.records.forEach(arret => {
-        const distance = calculerDistance(arret.fields.stop_lat, arret.fields.stop_lon);
-        console.log(distance);
-    })
+        calculerDistance(arret.fields.stop_lat, arret.fields.stop_lon, (distance) =>{
+        arretsDistance.push({ nomArret: arret.fields.stop_name, distance:Math.round(distance *100)/100 })
+        count ++;
+        if (count == nomArret.records.length){
+            arretsDistance.sort((a, b) => a.distance - b.distance);
+            console.log(arretsDistance[0].nomArret);}
+    })});
 }
 
 //maCarte.addEventListener("click",afficherArretsPlusProches);
