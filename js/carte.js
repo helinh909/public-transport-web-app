@@ -1,32 +1,23 @@
 console.log("Exécution du programme carte.js");
 
-//Creation de la carte
-maCarte = L.map("map").setView([46.148358, -1.156659], 12.5);
-const mapBoxAccessToken =
-  "pk.eyJ1IjoicGVkcm9kYWN0eWxlIiwiYSI6IjVmdHRmUjgifQ.Cl1waAaPYaOY9qJr14rCew";
-const mapBoxProjectId = "pedrodactyle.hgfj5llg";
-const fondDeCarte = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution:
-      'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+//Creation de la carte 
+maCarte = L.map('map').setView([46.148358, -1.156659], 12.5);
+const fondDeCarte = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     maxZoom: 25,
-    id: mapBoxProjectId,
-    accessToken: mapBoxAccessToken,
-  }
-);
+});
 fondDeCarte.addTo(maCarte);
 
 //------------------------------------------------------
 //Recuperation de la localisation actuelle
 
-if (navigator.geolocation) {
-  let watchId = navigator.geolocation.watchPosition(obtenirPosition, error, {
-    enableHighAccuracy: true,
-  });
-} else {
-  alert("Votre navigateur ne prend pas en compte la géolocalisation");
+/*if(navigator.geolocation){
+    let watchId = navigator.geolocation.getCurrentPosition(obtenirPosition,error,
+    {enableHighAccuracy:true ,maximumAge:0, timeout:60000});
 }
+else{
+    alert("Votre navigateur ne prend pas en compte la géolocalisation");
+}*/
 
 const maPositionIcon = L.icon({
   iconUrl: "images/maposition_icon.png",
@@ -37,18 +28,45 @@ let latitude;
 let longitude;
 let maPosition = L.marker([0, 0], { icon: maPositionIcon }).addTo(maCarte);
 
-function obtenirPosition(position) {
-  latitude = position.coords.latitude;
-  longitude = position.coords.longitude;
-  maPosition.setLatLng([latitude, longitude]);
-}
+/*function obtenirPosition(position, reponseAjax){
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    console.log(latitude);
+    console.log(longitude);
+    console.log(position.coords.accuracy)
+    maPosition.setLatLng([latitude,longitude]);
+} */
 
-function error() {
-  alert("Impossible d'obtenir la localisation");
+function obtenirPosition(callback) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                console.log(latitude);
+                console.log(longitude);
+                console.log(position.coords.accuracy)
+                maPosition.setLatLng([latitude,longitude]);
+                callback(position);
+            },
+            (error) => {
+                alert("Impossible d'obtenir la localisation");
+                callback(null);
+            },
+            { enableHighAccuracy: true, maximumAge: 0, timeout: 60000 }
+        );
+    } else {
+        alert("Votre navigateur ne prend pas en compte la géolocalisation");
+        callback(null);
+    }
 }
 
 function stopperGeolocalisation() {
   navigator.geolocation.clearWatch(watchId);
+}
+
+function error(){
+    alert("Impossible d'obtenir la localisation");
 }
 
 //Recentrage sur notre position
@@ -101,31 +119,15 @@ function afficherPositionsVelo(reponseAjax) {
   let markersVelo = new L.MarkerClusterGroup({
     maxClusterRadius: 10,
     //supprimer marqueurs trop éloignés de la fenêtre d'affichage
-    removeOutsideVisibleBounds: true,
-    iconCreateFunction: function (cluster) {
-      return veloIcon;
-    },
-  });
-  nomArret.records.forEach((arret) =>
-    markersVelo.addLayer(
-      L.marker(
-        [arret.fields.station_latitude, arret.fields.station_longitude],
-        { icon: veloIcon }
-      ).bindPopup(
-        "nom de la station : " +
-          arret.fields.station_nom +
-          "<br>" +
-          "vélos disponibles: " +
-          arret.fields.velos_disponibles +
-          "/" +
-          arret.fields.nombre_emplacements +
-          "<br>" +
-          "accroche disponibles: " +
-          arret.fields.accroches_libres
-      )
-    )
-  );
-  maCarte.addLayer(markersVelo);
+    removeOutsideVisibleBounds:true,
+    iconCreateFunction: function(cluster) {
+        return veloIcon}});
+    nomArret.records.forEach(arret => 
+        markersVelo.addLayer(L.marker([arret.fields.station_latitude.replace(',', '.'),arret.fields.station_longitude.replace(',', '.')],{icon: veloIcon}).bindPopup(
+            "nom de la station : "+arret.fields.station_nom + "<br>" +
+            "vélos disponibles: " +arret.fields.velos_disponibles+ "/"+arret.fields.nombre_emplacements+ "<br>" +
+            "accroche disponibles: " + arret.fields.accroches_libres)));
+    maCarte.addLayer(markersVelo);
 }
 
 //------------------------------------------------------
@@ -153,29 +155,44 @@ function afficherPositionsBus(reponseAjax) {
   });
   maCarte.addLayer(markersBus);
 }
-
-function calculerDistance(lat, long) {
-  const R = 6347;
-  const a = latitude * (Math.PI / 180);
-  const b = lat * (Math.PI / 180);
-  const c = longitude * (Math.PI / 180);
-  const d = long * (Math.PI / 180);
-  return a;
-  //return R* Math.acos(Math.sin(a)*Math.sin(b)+Math.cos(a)*Math.cos(b)*Math.cos(c-d));
+ 
+function calculerDistance(lat,long, maLatitude, maLongitude, callback){    
+    const R = 6347;
+    const b = lat * (Math.PI / 180);
+    const d = long * (Math.PI /180);
+    const a = maLatitude * (Math.PI / 180);
+    const c = maLongitude * (Math.PI / 180);
+    const distance= R* Math.acos(Math.sin(a)*Math.sin(b)+Math.cos(a)*Math.cos(b)*Math.cos(c-d));
+    callback(distance);    
 }
 
-function afficherArretsPlusProches(reponseAjax) {
-  const nomArret = reponseAjax.data;
-  nomArret.records.forEach((arret) => {
-    const distance = calculerDistance(
-      arret.fields.stop_lat,
-      arret.fields.stop_lon
-    );
-    console.log(distance);
-  });
+function afficherArretsPlusProches(reponseAjax){
+    const arretBus = reponseAjax.data;
+    let arretsDistance = [];
+    let count =0;
+    console.log(arretBus);
+
+    obtenirPosition((position) => {
+        const maLatitude = position.coords.latitude;
+        const maLongitude = position.coords.longitude;
+        arretBus.records.forEach(arret => {
+                    calculerDistance(arret.fields.stop_lat, arret.fields.stop_lon, maLatitude, maLongitude, (distance) =>{
+                        // gerer les doublons
+                        const doubleArret = arretsDistance.findIndex(element => element.nomArret === arret.fields.stop_name);
+                        if (doubleArret === -1) {
+                            arretsDistance.push({ nomArret: arret.fields.stop_name, distance:Math.round(distance *100)/100 })
+                        }
+                        count ++;
+                        if (count == arretBus.records.length){
+                            arretsDistance.sort((a, b) => a.distance - b.distance);
+                            console.log(arretsDistance[0].nomArret + " : " + arretsDistance[0].distance * 100 + " mètres");
+                            console.log(arretsDistance[1].nomArret + " : " + arretsDistance[1].distance * 100 + " mètres");
+                            console.log(arretsDistance[2].nomArret + " : " + arretsDistance[2].distance * 100 + " mètres");
+                        }  
+        })});
+    });
 }
 
-//maCarte.addEventListener("click",afficherArretsPlusProches);
 //-------------------------------------------------------
 
 // _________________________________________ esseyer les suggestions de depart
