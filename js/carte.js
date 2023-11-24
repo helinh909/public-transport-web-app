@@ -179,38 +179,77 @@ function afficherArretsPlusProches(reponseAjax) {
 //-------------------------------------------------------
 
 // _________________________________________ esseyer les suggestions de depart
+const departInput = document.getElementById("depart-input");
+const arriveeInput = document.getElementById("arrivee-input");
+const departSuggestionsList = document.getElementById(
+  "depart-suggestions-list"
+);
+const arriveeSuggestionsList = document.getElementById(
+  "arrivee-suggestions-list"
+);
 
-document.addEventListener("DOMContentLoaded", function () {
-  const departInput = document.getElementById("depart-input");
-  const suggestionsList = document.getElementById("suggestions-list");
+departInput.addEventListener("focus", () =>
+  showSuggestions(departInput, departSuggestionsList)
+);
+departInput.addEventListener("input", () =>
+  handleInput(departInput, departSuggestionsList)
+);
 
-  departInput.addEventListener("input", function () {
-    const userInput = departInput.value.toLowerCase();
-    const suggestions = [
-      "La Rochelle",
+arriveeInput.addEventListener("focus", () =>
+  showSuggestions(arriveeInput, arriveeSuggestionsList)
+);
+arriveeInput.addEventListener("input", () =>
+  handleInput(arriveeInput, arriveeSuggestionsList)
+);
+
+function showSuggestions(input, suggestionsList) {
+  const suggestions = fetchSuggestions("");
+  displaySuggestions(suggestions, suggestionsList);
+
+  function handleInput(input, suggestionsList) {
+    const userInput = input.value.trim();
+    const suggestions = fetchSuggestions(userInput);
+    displaySuggestions(suggestions, suggestionsList);
+  }
+
+  function fetchSuggestions(query) {
+    const suggestionsStatiques = [
+      "Technoforum",
       "Les Minimes",
-      "Charente-Maritime",
-      "Aytré",
+      "Dames Blanche",
     ];
-    const filteredSuggestions = suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(userInput)
+    return suggestionsStatiques.filter((suggestion) =>
+      suggestion.toLowerCase().includes(query.toLowerCase())
     );
+  }
 
-    // Ajoutez "Ma position" à la liste des suggestions
-    if (userInput.trim() !== "") {
-      filteredSuggestions.unshift("Ma position");
-    }
-
+  function displaySuggestions(suggestions, suggestionsList) {
     suggestionsList.innerHTML = "";
-
-    filteredSuggestions.forEach((suggestion) => {
-      const suggestionItem = document.createElement("li");
-      suggestionItem.textContent = suggestion;
-      suggestionItem.addEventListener("click", function () {
-        departInput.value = suggestion;
-        suggestionsList.innerHTML = "";
-      });
-      suggestionsList.appendChild(suggestionItem);
+    suggestions.forEach((suggestion) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = suggestion;
+      listItem.addEventListener("click", () =>
+        selectSuggestion(suggestion, input)
+      );
+      suggestionsList.appendChild(listItem);
     });
-  });
+  }
+
+  function selectSuggestion(suggestion, input) {
+    input.value = suggestion;
+    suggestionsList.innerHTML = "";
+  }
+}
+document.addEventListener("click", (event) => {
+  // Vérifier si l'événement de clic ne provient pas des inputs ou de la liste de suggestions
+  if (
+    !departInput.contains(event.target) &&
+    !arriveeInput.contains(event.target) &&
+    !departSuggestionsList.contains(event.target) &&
+    !arriveeSuggestionsList.contains(event.target)
+  ) {
+    // Si le clic n'est pas dans les inputs ou les suggestions, fermez les suggestions
+    departSuggestionsList.innerHTML = "";
+    arriveeSuggestionsList.innerHTML = "";
+  }
 });

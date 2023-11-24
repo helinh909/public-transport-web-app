@@ -78,7 +78,7 @@ html {
   border-radius: 1rem;
   display: flex;
 }
-.search_bar .icon {
+/* .search_bar .icon {
   width: 3rem;
   height: 3rem;
   background: white;
@@ -93,16 +93,18 @@ html {
 
 .search_bar .icon i {
   color: rgba(152, 152, 152, 0.357);
-}
+} */
 
 .search_bar input {
-  width: 90%;
+  width: 100%;
   height: auto;
   padding-top: 0.7rem;
-  left: 5rem;
+  padding-left: 2rem;
   border: none;
   outline: none;
   font-size: 1.4rem;
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .MyButton {
@@ -144,7 +146,7 @@ html {
 .sidebar {
   flex-basis: 40rem;
 
-  background-color: rgba(216, 219, 116, 0.607);
+  background-color: rgba(183, 142, 28, 0.607);
   padding: 3rem 5rem 4rem 5rem;
   display: flex;
   flex-direction: column;
@@ -308,29 +310,18 @@ html {
 }
 /* _____________________________ */
 /* Styling for the suggestions list */
+
 .suggestions-list {
   list-style: none; /* Remove default list styling */
-  padding: 0;
-  margin: 0;
+  margin-top: 4rem;
+  width: 100%;
   position: absolute;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 0 0 1rem 1rem;
+  border-radius: 1rem 1rem 1rem 1rem;
   z-index: 1000;
-  max-height: 200px; /* Adjust as needed */
-  overflow-y: auto;
-  width: calc(90% - 2rem);
+  padding-left: 1rem;
   left: 1rem;
 }
 
 /* Styling for individual suggestion items */
-.suggestions-list li {
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-/* Highlight suggestion item on hover */
-.suggestions-list li:hover {
-  background-color: #e0e0e0;
-}
