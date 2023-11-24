@@ -1,4 +1,4 @@
-console.log('Exécution du programme carte.js');
+console.log("Exécution du programme carte.js");
 
 //Creation de la carte 
 maCarte = L.map('map').setView([46.148358, -1.156659], 12.5);
@@ -19,14 +19,14 @@ else{
     alert("Votre navigateur ne prend pas en compte la géolocalisation");
 }*/
 
-const maPositionIcon =L.icon({
-    iconUrl: 'images/maposition_icon.png',
-    iconSize: [40,40],
+const maPositionIcon = L.icon({
+  iconUrl: "images/maposition_icon.png",
+  iconSize: [40, 40],
 });
 
 let latitude;
 let longitude;
-let maPosition = L.marker([0,0], {icon: maPositionIcon}).addTo(maCarte);
+let maPosition = L.marker([0, 0], { icon: maPositionIcon }).addTo(maCarte);
 
 /*function obtenirPosition(position, reponseAjax){
     latitude = position.coords.latitude;
@@ -61,8 +61,8 @@ function obtenirPosition(callback) {
     }
 }
 
-function stopperGeolocalisation(){
-    navigator.geolocation.clearWatch(watchId);
+function stopperGeolocalisation() {
+  navigator.geolocation.clearWatch(watchId);
 }
 
 function error(){
@@ -71,48 +71,53 @@ function error(){
 
 //Recentrage sur notre position
 
-boutonRecentrage = document.querySelector('.boutonRecentrage');
-boutonRecentrage.addEventListener("click",recentrerPosition);
+boutonRecentrage = document.querySelector(".boutonRecentrage");
+boutonRecentrage.addEventListener("click", recentrerPosition);
 
-function recentrerPosition(){
-    //navigator.geolocation.watchPosition(obtenirPosition, error);
-    maCarte.setView([latitude,longitude], 15);
+function recentrerPosition() {
+  //navigator.geolocation.watchPosition(obtenirPosition, error);
+  maCarte.setView([latitude, longitude], 15);
 }
 
 //-----------------------------------------------------
 //API
-const carte = document.querySelector("#map")
-function recupererBus(){
-    const promesseRecupBus = axios.get('https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id');
-    promesseRecupBus.then(afficherPositionsBus)
-    promesseRecupBus.then(afficherArretsPlusProches);
-    promesseRecupBus.catch(traiterErreurAjax)
+const carte = document.querySelector("#map");
+function recupererBus() {
+  const promesseRecupBus = axios.get(
+    "https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id"
+  );
+  promesseRecupBus.then(afficherPositionsBus);
+  promesseRecupBus.then(afficherArretsPlusProches);
+  promesseRecupBus.catch(traiterErreurAjax);
 }
 
-function recupererVelos(){
-    const promesseRecupVelo = axios.get('https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=yelo___disponibilite_des_velos_en_libre_service&rows=140&facet=station_nom');
-    promesseRecupVelo.then(afficherPositionsVelo)
-    promesseRecupVelo.catch(traiterErreurAjax)
+function recupererVelos() {
+  const promesseRecupVelo = axios.get(
+    "https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=yelo___disponibilite_des_velos_en_libre_service&rows=140&facet=station_nom"
+  );
+  promesseRecupVelo.then(afficherPositionsVelo);
+  promesseRecupVelo.catch(traiterErreurAjax);
 }
 
-function traiterDonneeRecue(reponseAjax){
-    console.log(reponseAjax);
+function traiterDonneeRecue(reponseAjax) {
+  console.log(reponseAjax);
 }
-function traiterErreurAjax(erreur){
-    console.log(erreur);
+function traiterErreurAjax(erreur) {
+  console.log(erreur);
 }
 recupererBus();
 recupererVelos();
 //-------------------------------------------------------
 //les Velos
-const veloIcon =L.icon({
-    iconUrl: 'images/velo_icon.png',
-    iconSize: [25,25],
+const veloIcon = L.icon({
+  iconUrl: "images/velo_icon.png",
+  iconSize: [25, 25],
 });
 
-function afficherPositionsVelo(reponseAjax){
-    const nomArret = reponseAjax.data;
-    let markersVelo = new L.MarkerClusterGroup({maxClusterRadius:10,
+function afficherPositionsVelo(reponseAjax) {
+  const nomArret = reponseAjax.data;
+  let markersVelo = new L.MarkerClusterGroup({
+    maxClusterRadius: 10,
     //supprimer marqueurs trop éloignés de la fenêtre d'affichage
     removeOutsideVisibleBounds:true,
     iconCreateFunction: function(cluster) {
@@ -124,24 +129,31 @@ function afficherPositionsVelo(reponseAjax){
             "accroche disponibles: " + arret.fields.accroches_libres)));
     maCarte.addLayer(markersVelo);
 }
-    
+
 //------------------------------------------------------
 //Les bus
-const busIcon =L.icon({
-    iconUrl: 'images/bus_icon.png',
-    iconSize: [25,25],
+const busIcon = L.icon({
+  iconUrl: "images/bus_icon.png",
+  iconSize: [25, 25],
 });
 
-function afficherPositionsBus(reponseAjax){
-    const nomArret = reponseAjax.data;
-    let markersBus = new L.MarkerClusterGroup({maxClusterRadius:15,
-    removeOutsideVisibleBounds:true,
-    iconCreateFunction: function(cluster) {
-        return busIcon}});
-    nomArret.records.forEach(arret => {
-        markersBus.addLayer(L.marker([arret.fields.stop_lat, arret.fields.stop_lon], {icon: busIcon}).bindPopup(
-        "arret: " +arret.fields.stop_name))});
-    maCarte.addLayer(markersBus);
+function afficherPositionsBus(reponseAjax) {
+  const nomArret = reponseAjax.data;
+  let markersBus = new L.MarkerClusterGroup({
+    maxClusterRadius: 15,
+    removeOutsideVisibleBounds: true,
+    iconCreateFunction: function (cluster) {
+      return busIcon;
+    },
+  });
+  nomArret.records.forEach((arret) => {
+    markersBus.addLayer(
+      L.marker([arret.fields.stop_lat, arret.fields.stop_lon], {
+        icon: busIcon,
+      }).bindPopup("arret: " + arret.fields.stop_name)
+    );
+  });
+  maCarte.addLayer(markersBus);
 }
  
 function calculerDistance(lat,long, maLatitude, maLongitude, callback){    
@@ -183,5 +195,78 @@ function afficherArretsPlusProches(reponseAjax){
 
 //-------------------------------------------------------
 
+// _________________________________________ esseyer les suggestions de depart
+const departInput = document.getElementById("depart-input");
+const arriveeInput = document.getElementById("arrivee-input");
+const departSuggestionsList = document.getElementById(
+  "depart-suggestions-list"
+);
+const arriveeSuggestionsList = document.getElementById(
+  "arrivee-suggestions-list"
+);
 
+departInput.addEventListener("focus", () =>
+  showSuggestions(departInput, departSuggestionsList)
+);
+departInput.addEventListener("input", () =>
+  handleInput(departInput, departSuggestionsList)
+);
 
+arriveeInput.addEventListener("focus", () =>
+  showSuggestions(arriveeInput, arriveeSuggestionsList)
+);
+arriveeInput.addEventListener("input", () =>
+  handleInput(arriveeInput, arriveeSuggestionsList)
+);
+
+function showSuggestions(input, suggestionsList) {
+  const suggestions = fetchSuggestions("");
+  displaySuggestions(suggestions, suggestionsList);
+
+  function handleInput(input, suggestionsList) {
+    const userInput = input.value.trim();
+    const suggestions = fetchSuggestions(userInput);
+    displaySuggestions(suggestions, suggestionsList);
+  }
+
+  function fetchSuggestions(query) {
+    const suggestionsStatiques = [
+      "Technoforum",
+      "Les Minimes",
+      "Dames Blanche",
+    ];
+    return suggestionsStatiques.filter((suggestion) =>
+      suggestion.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  function displaySuggestions(suggestions, suggestionsList) {
+    suggestionsList.innerHTML = "";
+    suggestions.forEach((suggestion) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = suggestion;
+      listItem.addEventListener("click", () =>
+        selectSuggestion(suggestion, input)
+      );
+      suggestionsList.appendChild(listItem);
+    });
+  }
+
+  function selectSuggestion(suggestion, input) {
+    input.value = suggestion;
+    suggestionsList.innerHTML = "";
+  }
+}
+document.addEventListener("click", (event) => {
+  // Vérifier si l'événement de clic ne provient pas des inputs ou de la liste de suggestions
+  if (
+    !departInput.contains(event.target) &&
+    !arriveeInput.contains(event.target) &&
+    !departSuggestionsList.contains(event.target) &&
+    !arriveeSuggestionsList.contains(event.target)
+  ) {
+    // Si le clic n'est pas dans les inputs ou les suggestions, fermez les suggestions
+    departSuggestionsList.innerHTML = "";
+    arriveeSuggestionsList.innerHTML = "";
+  }
+});

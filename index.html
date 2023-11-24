@@ -4,15 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/axios.min.js" defer></script>
     <script defer src="js/carte.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"/>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"
+    />
     <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    <title>YELO</title>
+    <title>WayNav</title>
   </head>
   <body>
     <header>
@@ -24,9 +33,9 @@
           <i class="bx bx-x" id="close-icon"></i>
         </label>
         <nav class="navbar">
-          <a href="#">Home</a>
-          <a href="#">services</a>
-          <a href="#">about</a>
+          <a href="#home">Home</a>
+          <a href="#services">Services</a>
+          <a href="#about">About</a>
         </nav>
       </div>
     </header>
@@ -35,25 +44,92 @@
         <h1 class="title_bar">La Rochelle</h1>
         <div class="search">
           <div class="search_bar">
-            <div class="icon"><i class="bx bx-search"></i></div>
-            <div class="input">
-              <input type="text" placeholder="Départ" id="mysearch" />
-            </div>
+            <input
+              type="text"
+              placeholder="Départ"
+              class="search-input"
+              id="depart-input"
+            />
+            <ul id="depart-suggestions-list" class="suggestions-list"></ul>
           </div>
 
           <div class="search_bar">
-            <div class="icon"><i class="bx bx-search"></i></div>
-            <div class="input">
-              <input type="text" placeholder="Arrivée" id="mysearch" />
-            </div>
+            <input
+              type="text"
+              placeholder="Arrivée"
+              class="search-input"
+              id="arrivee-input"
+            />
+            <ul id="arrivee-suggestions-list" class="suggestions-list"></ul>
           </div>
           <div class="MyButton">
             <button><a href="#">Go</a></button>
+          </div>
         </div>
+
+        <!-- Nouvelle section d'options de transport -->
+        <div class="transport-options">
+          <a href="#" class="transport-bus">
+            <div><i class="bx bxs-bus"></i> <b>Bus</b></div>
+            <div><span>23min</span></div>
+          </a>
+          <a href="#" class="transport-marche">
+            <div><i class="bx bx-walk"></i> <b>Marche</b></div>
+            <div><span>15min</span></div>
+          </a>
+          <a href="#" class="transport-velo">
+            <div><i class="bx bx-cycling"></i><b> Vélo</b></div>
+            <div><span>10min</span></div>
+          </a>
+        </div>
+        <div class="suggéré"><h2>Suggérés</h2></div>
+
+        <div class="recent-buses">
+          <!-- Bus récent 1 -->
+          <a href="#" class="recent-bus-link">
+            <div class="recent-bus">
+              <div class="recent-info">
+                <span class="price">2.10€</span>
+                <span class="duration">22 min</span>
+              </div>
+              <div class="arrival-info">
+                <span>dans 11, 16 min de La Rochelle - Les Minimes</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Bus récent 2 -->
+          <a href="#" class="recent-bus-link">
+            <div class="recent-bus">
+              <div class="recent-info">
+                <span class="price">2.10€</span>
+                <span class="duration">21 min</span>
+              </div>
+              <div class="arrival-info">
+                <span>dans 1, 4, 7 min de La Rochelle - Charente-Maritime</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Bus récent 3 -->
+          <a href="#" class="recent-bus-link">
+            <div class="recent-bus">
+              <div class="recent-info">
+                <span class="price">2.10€</span>
+                <span class="duration">36 min</span>
+              </div>
+              <div class="arrival-info">
+                <span>16:18 (À l'heure) Pontoise de La Rochelle - Aytré</span>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
+
       <div id="map">
-        <button class="boutonRecentrage"><img src="images/boutonRecentrage_icon.png" alt="boutonRecentrage"></button>
+        <button class="boutonRecentrage">
+          <img src="images/boutonRecentrage_icon.png" alt="boutonRecentrage" />
+        </button>
       </div>
     </section>
   </body>
