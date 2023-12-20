@@ -182,7 +182,7 @@ html {
 }
 
 .transport-bus,
-.transport-marche,
+.transport-horaire,
 .transport-velo {
   flex: 1;
   display: flex;
@@ -196,7 +196,7 @@ html {
 }
 
 .transport-bus i,
-.transport-marche i,
+.transport-horaire i,
 .transport-velo i {
   color: #ffd700;
   margin-right: 10px; /* Espace entre l'icône et le texte */
@@ -204,7 +204,7 @@ html {
 }
 
 .transport-bus b,
-.transport-marche b,
+.transport-horaire b,
 .transport-velo b {
   font-size: 1.3rem; /* Taille du texte principal */
   font-weight: bold; /* Mettre en gras */
@@ -215,7 +215,7 @@ html {
   border-radius: 1rem 0 0 1rem;
 }
 
-.transport-marche {
+.transport-horaire {
   border: 1px solid #ccc;
   border-top: none;
   border-bottom: none;
@@ -226,7 +226,7 @@ html {
 }
 
 .transport-bus:hover,
-.transport-marche:hover,
+.transport-horaire:hover,
 .transport-velo:hover {
   background-color: #e0e0e0;
 }
@@ -265,7 +265,7 @@ html {
   color: #fff;
 }
 
-.recent-buses {
+.recent-buses, .recent-horaires, .recent-stations {
   background: #fff;
   border-radius: 1rem;
 }
@@ -274,7 +274,8 @@ html {
   text-decoration: none;
   color: #000; /* Couleur du texte pour les liens */
   display: block;
-  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */
+  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */  
+  border-radius:1rem;
   display: flex;
   padding: 10px;
   color: inherit;
@@ -286,25 +287,71 @@ html {
   background-color: #e0e0e0; /* Couleur de fond au survol */
 }
 
-.recent-bus {
+.recent-bus, .recent-station {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ffd700;
-  border-radius: 1rem;
-  padding: 2rem 0; 
+  padding: 1rem 0; 
 }
 
-.distance-bus {
+.recent-horaire{  
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;  
+  border-bottom: 1px solid #ffd700;
+  border-radius:1rem;
+  padding: 1.5rem 0;
+}
+
+.distance-bus, .distance-station {
   font-size: 1.3rem;
-  padding-left: 2rem;
+  padding-left: 0.75rem;
   font-weight: bold; 
   color: #ffd700; 
 }
 
-.name-bus {
+.horaire-bus{  
   font-size: 1.3rem;
-  padding-right: 2rem;
+  padding-left: 2rem;
+  padding-right: 1rem;
+  font-weight: bold; 
+  color: #ffd700; 
+}
+
+.name-bus,.name-station {
+  font-size: 1.3rem;
+  padding-left: 1.5rem;
   color: #666;
+}
+
+.destination-bus{  
+  padding-right: 2rem;
+  font-size: 1.3rem;
+  color: #666;
+}
+
+.ligne-bus{
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #666;
+  padding-left: 1.75rem;
+}
+
+
+.destination-bus::before {
+  content: "";
+  display: inline-block;
+  padding-right: 0.5rem;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #666;
+}
+
+.title-bus{  
+  font-size: 1.3rem;  
+  color: #666;
+  font-weight: lighter;
+  padding-left: 2rem;
+  padding-top: 10px;  
 }
 /* _____________________________ */
 /* Styling for the suggestions list */
@@ -339,51 +386,7 @@ html {
 
 
 /* Styling for individual suggestion items */
-.suggéréVelo {
-  font-size: 1.6rem;
-  margin-top: 3rem;
-  margin-bottom: 1rem;
-  color: #fff;
-}
 
-.recent-stations {
-  background: #fff;
-  border-radius: 1rem;
-}
-
-.recent-station-link {
-  text-decoration: none;
-  color: #000; /* Couleur du texte pour les liens */
-  display: block;
-  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */
-  display: flex;
-  padding: 10px;
-  color: inherit;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.recent-station-link:hover {
-  background-color: #e0e0e0; /* Couleur de fond au survol */
-}
-
-.recent-station {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #ffd700;
-  border-radius: 1rem;
-  padding: 2rem 0; 
-}
-
-.distance-station {
-  font-size: 1.3rem;
-  padding-left: 2rem;
-  font-weight: bold; 
-  color: #ffd700; 
-}
-
-.name-stattion {
-  font-size: 1.3rem;
-  padding-right: 2rem;
-  color: #666;
+.invisible{
+  display:none;
 }
