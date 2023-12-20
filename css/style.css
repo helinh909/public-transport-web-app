@@ -19,7 +19,7 @@ html {
   width: 100%;
   padding: 1.3rem 10%;
   /* background: rgba(0, 0, 0, 0.1); */
-  background:rgb(15, 40, 90);
+  background: #ffd700;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,7 +57,7 @@ html {
 .section {
   font-family: "Manrope", sans-serif;
   font-weight: 400;
-  height: 100vh;
+  height: 200vh;
   background-color: #fff;
   display: flex;
 }
@@ -146,16 +146,16 @@ html {
 .sidebar {
   flex-basis: 40rem;
 
-  background-color:rgb(162, 197, 198);
+  background-color: rgba(183, 142, 28, 0.607);
   padding: 3rem 5rem 4rem 5rem;
   display: flex;
   flex-direction: column;
 }
 
 .title_bar {
-  height: 2.2rem;
+  height: 5.2rem;
   align-self: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 4rem;
   color: #fff;
 }
 
@@ -259,15 +259,15 @@ html {
 /* ___________________________ */
 
 .suggéré {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   margin-top: 3rem;
-  margin-bottom: 1rem;
   color: #fff;
 }
 
 .recent-buses {
   background: #fff;
   border-radius: 1rem;
+  padding: 3rem 2rem; /* Ajustez le padding selon vos préférences */
 }
 
 .recent-bus-link {
@@ -289,21 +289,23 @@ html {
 .recent-bus {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ffd700;
-  border-radius: 1rem;
-  padding: 2rem 0; 
+  padding: 1rem 0; /* Ajoutez un espace intérieur */
 }
 
-.distance-bus {
-  font-size: 1.3rem;
-  padding-left: 2rem;
-  font-weight: bold; 
-  color: #ffd700; 
+.recent-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.name-bus {
+.price,
+.duration {
+  font-size: 1.5rem;
+  font-weight: bold; /* Mettez en gras le prix et la durée */
+  color: #ffd700; /* Couleur du texte pour le prix et la durée */
+}
+
+.arrival-info {
   font-size: 1.3rem;
-  padding-right: 2rem;
   color: #666;
 }
 /* _____________________________ */
@@ -322,68 +324,4 @@ html {
   left: 1rem;
 }
 
-.distance-bus1{
-  color:#ffd700;
-  font-weight: bold;
-}
-
-.distance-bus2{
-  color:#ffd700;
-  font-weight: bold;
-}
-
-.distance-bus3{
-  color:#ffd700;
-  font-weight: bold;
-}
-
-
 /* Styling for individual suggestion items */
-.suggéréVelo {
-  font-size: 1.6rem;
-  margin-top: 3rem;
-  margin-bottom: 1rem;
-  color: #fff;
-}
-
-.recent-stations {
-  background: #fff;
-  border-radius: 1rem;
-}
-
-.recent-station-link {
-  text-decoration: none;
-  color: #000; /* Couleur du texte pour les liens */
-  display: block;
-  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */
-  display: flex;
-  padding: 10px;
-  color: inherit;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.recent-station-link:hover {
-  background-color: #e0e0e0; /* Couleur de fond au survol */
-}
-
-.recent-station {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #ffd700;
-  border-radius: 1rem;
-  padding: 2rem 0; 
-}
-
-.distance-station {
-  font-size: 1.3rem;
-  padding-left: 2rem;
-  font-weight: bold; 
-  color: #ffd700; 
-}
-
-.name-stattion {
-  font-size: 1.3rem;
-  padding-right: 2rem;
-  color: #666;
-}
