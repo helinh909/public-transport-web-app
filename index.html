@@ -1,21 +1,26 @@
-
-
 <!DOCTYPE html>
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"rel="stylesheet"/>
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
-    <link rel= "stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-    
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/axios.min.js" defer></script>
     <script defer src="js/carte.js"></script>
-    
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <title>WayNav</title>
   </head>
   <body>
@@ -39,13 +44,24 @@
         <h1 class="title_bar">La Rochelle</h1>
         <div class="search">
           <div class="search_bar">
-            <input type="text" placeholder="Départ" class="search-input"id="depart-input"/>
+            <input
+              type="text"
+              placeholder="Départ"
+              class="search-input"
+              id="depart-input"
+            />
             <ul id="depart-suggestions-list" class="suggestions-list"></ul>
           </div>
+
           <div class="search_bar">
-            <input type="text" id="destination-input" placeholder="Entrez votre destination" />
-            <ul id="suggestions-list" class="suggestions-list"></ul>
-            </div>
+            <input
+              type="text"
+              placeholder="Arrivée"
+              class="search-input"
+              id="arrivee-input"
+            />
+            <ul id="arrivee-suggestions-list" class="suggestions-list"></ul>
+          </div>
           <div class="MyButton">
             <button><a href="#">Go</a></button>
           </div>
@@ -66,11 +82,48 @@
             <div><span>10min</span></div>
           </a>
         </div>
-        <h2 class="suggéré"></h2>
+        <div class="suggéré"><h2>Suggérés</h2></div>
+
         <div class="recent-buses">
+          <!-- Bus récent 1 -->
+          <a href="#" class="recent-bus-link">
+            <div class="recent-bus">
+              <div class="recent-info">
+                <span class="price">2.10€</span>
+                <span class="duration">22 min</span>
+              </div>
+              <div class="arrival-info">
+                <span>dans 11, 16 min de La Rochelle - Les Minimes</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Bus récent 2 -->
+          <a href="#" class="recent-bus-link">
+            <div class="recent-bus">
+              <div class="recent-info">
+                <span class="price">2.10€</span>
+                <span class="duration">21 min</span>
+              </div>
+              <div class="arrival-info">
+                <span>dans 1, 4, 7 min de La Rochelle - Charente-Maritime</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Bus récent 3 -->
+          <a href="#" class="recent-bus-link">
+            <div class="recent-bus">
+              <div class="recent-info">
+                <span class="price">2.10€</span>
+                <span class="duration">36 min</span>
+              </div>
+              <div class="arrival-info">
+                <span>16:18 (À l'heure) Pontoise de La Rochelle - Aytré</span>
+              </div>
+            </div>
+          </a>
         </div>
-        <h2 class="suggéréVelo">ICI</h2>
-        <div class="recent-stations"></div>
       </div>
 
       <div id="map">
