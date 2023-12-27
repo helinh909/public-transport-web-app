@@ -6,11 +6,14 @@
   box-sizing: inherit;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
 }
 
-html {
-  font-size: 62.5%;
-  box-sizing: border-box;
+body {
+  font-size: 14px;
+}
+.suggestions-list li.highlight {
+  background-color: #a0d3ff; /* Changez la couleur de fond pour indiquer le survol */
 }
 
 .header {
@@ -18,33 +21,20 @@ html {
   left: 0;
   width: 100%;
   padding: 1.3rem 10%;
-  /* background: rgba(0, 0, 0, 0.1); */
-  background:rgb(15, 40, 90);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
+  background: rgb(15, 40, 90);
 }
 
 .logo {
-  font-size: 2rem;
+  font-size: 1.3rem;
   color: #fff;
   text-decoration: none;
   font-weight: 700;
 }
 
-.navbar a {
-  font-size: 1.5rem;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-  margin-left: 2.5rem;
-}
-
 #check {
   display: none;
 }
-/* 
+
 .icons {
   position: absolute;
   right: 5%;
@@ -52,69 +42,75 @@ html {
   color: #fff;
   cursor: pointer;
   display: none;
-} */
+}
 
 .section {
   font-family: "Manrope", sans-serif;
   font-weight: 400;
-  height: 100vh;
+  height: 92vh;
   background-color: #fff;
   display: flex;
+  flex-direction: row;
+  background-color: rgb(64, 104, 161);
+  /* flex-direction: column; */
+}
+
+/* scroll Bar */
+.scroll-div {
+  width: 40rem;
+  overflow-y: scroll;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 100%;
+  background-color: rgb(64, 104, 161);
+  padding: 2rem 3rem 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.title_bar {
+  align-self: center;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+h4 {
+  padding-top: 30px;
+  font-size: 1.4em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: rgb(130, 130, 130);
 }
 
 .search {
   background: #ffd700;
   border-radius: 1rem;
-  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .search_bar {
   position: relative;
-  width: 90%;
-  height: 3.5rem;
+  font-size: 0.7em;
+  width: 89%;
   background: #fff;
-  /* margin-top: 0.7rem;
-  margin-left: 5rem; */
-  margin: auto auto 0.7rem auto;
   border-radius: 1rem;
   display: flex;
+  margin-bottom: 2rem;
 }
-/* .search_bar .icon {
-  width: 3rem;
-  height: 3rem;
-  background: white;
-  border-radius: 60px;
-  margin-top: 0.5rem;
-  margin-left: 0.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.search_bar .icon i {
-  color: rgba(152, 152, 152, 0.357);
-} */
 
 .search_bar input {
   width: 100%;
   height: auto;
-  padding-top: 0.7rem;
-  padding-left: 2rem;
   border: none;
+  padding: 10px;
   outline: none;
-  font-size: 1.4rem;
   border-radius: 1rem;
-  margin-bottom: 0.5rem;
 }
 
-.MyButton {
-  position: relative;
-  margin: auto auto 0.7rem auto;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-}
-.search button {
+/* .search button {
   width: 7rem;
   height: 3rem;
   border-radius: 35px;
@@ -127,8 +123,8 @@ html {
   text-align: center;
   left: 50%;
   top: 50%;
-}
-.search a {
+} */
+/* .search a {
   text-decoration: none;
   color: #fff;
 }
@@ -139,46 +135,21 @@ html {
 .search a button:hover {
   text-decoration: none;
   color: rgb(223, 126, 37);
-}
+} */
 /* GENERAL */
 
-/* SIDEBAR */
-.sidebar {
-  flex-basis: 40rem;
-
-  background-color:rgb(162, 197, 198);
-  padding: 3rem 5rem 4rem 5rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.title_bar {
-  height: 2.2rem;
-  align-self: center;
-  margin-bottom: 1.5rem;
-  color: #fff;
-}
-
-.copyright {
-  margin-top: auto;
-  font-size: 1.3rem;
-  text-align: center;
-  color: rgb(223, 126, 37);
-}
-
 /* MAP */
-#map {
-  flex: 1;
+.map {
   height: 100%;
-  width: 80%;
+  width: 100%;
 }
-
 /* transport option */
 .transport-options {
   background: #fff;
   margin-top: 2rem;
   display: flex;
   border-radius: 1rem;
+  padding: 10px;
 }
 
 .transport-bus,
@@ -186,9 +157,9 @@ html {
 .transport-velo {
   flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px;
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -199,14 +170,13 @@ html {
 .transport-horaire i,
 .transport-velo i {
   color: #ffd700;
-  margin-right: 10px; /* Espace entre l'icône et le texte */
-  font-size: 1.8rem; /* Taille de l'icône */
+  font-size: 1.2rem; /* Taille de l'icône */
 }
 
 .transport-bus b,
 .transport-horaire b,
 .transport-velo b {
-  font-size: 1.3rem; /* Taille du texte principal */
+  font-size: 0.8rem; /* Taille du texte principal */
   font-weight: bold; /* Mettre en gras */
   color: #939393;
 }
@@ -259,13 +229,15 @@ html {
 /* ___________________________ */
 
 .suggéré {
-  font-size: 1.6rem;
+  font-size: 1.1rem;
   margin-top: 3rem;
   margin-bottom: 1rem;
   color: #fff;
 }
 
-.recent-buses, .recent-horaires, .recent-stations {
+.recent-buses,
+.recent-horaires,
+.recent-stations {
   background: #fff;
   border-radius: 1rem;
 }
@@ -274,8 +246,8 @@ html {
   text-decoration: none;
   color: #000; /* Couleur du texte pour les liens */
   display: block;
-  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */  
-  border-radius:1rem;
+  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */
+  border-radius: 1rem;
   display: flex;
   padding: 10px;
   color: inherit;
@@ -287,55 +259,62 @@ html {
   background-color: #e0e0e0; /* Couleur de fond au survol */
 }
 
-.recent-bus, .recent-station {
+.recent-bus,
+.recent-station {
   display: flex;
   justify-content: space-between;
-  padding: 1rem 0; 
+  padding: 1rem 0;
 }
 
-.recent-horaire{  
+.recent-horaire {
   display: flex;
   justify-content: space-between;
-  padding: 1rem 0;  
+  padding: 1rem 0;
   border-bottom: 1px solid #ffd700;
-  border-radius:1rem;
+  border-radius: 1rem;
   padding: 1.5rem 0;
 }
 
-.distance-bus, .distance-station {
-  font-size: 1.3rem;
+.distance-bus,
+.distance-station {
+  font-size: 0.9rem;
   padding-left: 0.75rem;
-  font-weight: bold; 
-  color: #ffd700; 
+  font-weight: bold;
+  color: #ffd700;
 }
 
-.horaire-bus{  
-  font-size: 1.3rem;
+.horaire-bus {
+  font-size: 0.9rem;
   padding-left: 2rem;
   padding-right: 1rem;
-  font-weight: bold; 
-  color: #ffd700; 
+  font-weight: bold;
+  color: #ffd700;
 }
 
-.name-bus,.name-station {
+.no-horaire {
+  padding-left: 2rem;
   font-size: 1.3rem;
+}
+
+.name-bus,
+.name-station {
+  font-size: 0.91rem;
   padding-left: 1.5rem;
   color: #666;
 }
 
-.destination-bus{  
+.destination-bus {
   padding-right: 2rem;
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: #666;
 }
 
-.ligne-bus{
-  font-size: 1.3rem;
+.ligne-bus {
+  font-size: 0.9rem;
   font-weight: bold;
   color: #666;
   padding-left: 1.75rem;
 }
-
 
 .destination-bus::before {
   content: "";
@@ -346,12 +325,12 @@ html {
   border-left: 8px solid #666;
 }
 
-.title-bus{  
-  font-size: 1.3rem;  
+.title-bus {
+  font-size: 0.9rem;
   color: #666;
   font-weight: lighter;
   padding-left: 2rem;
-  padding-top: 10px;  
+  padding-top: 10px;
 }
 /* _____________________________ */
 /* Styling for the suggestions list */
@@ -369,24 +348,54 @@ html {
   left: 1rem;
 }
 
-.distance-bus1{
-  color:#ffd700;
+.distance-bus1 {
+  color: #ffd700;
   font-weight: bold;
 }
 
-.distance-bus2{
-  color:#ffd700;
+.distance-bus2 {
+  color: #ffd700;
   font-weight: bold;
 }
 
-.distance-bus3{
-  color:#ffd700;
+.distance-bus3 {
+  color: #ffd700;
   font-weight: bold;
 }
 
-
+/* -------------------------- */
 /* Styling for individual suggestion items */
 
-.invisible{
-  display:none;
+.invisible {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  h4 {
+    text-align: center;
+  }
+
+  .map {
+    min-height: 60vh;
+    width: 81%;
+    border-radius: 12px;
+    border: 5px solid white;
+    box-shadow: 0 5px 25px rgba(1 1 1 /15%);
+    margin: auto;
+    margin-bottom: 30px;
+  }
+  .scroll-div {
+    background-color: rgb(64, 104, 161);
+    width: 100%;
+    height: 100%;
+  }
+  .header {
+    display: flex;
+    justify-content: center;
+  }
 }
