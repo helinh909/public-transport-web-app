@@ -1,9 +1,6 @@
 console.log("Exécution du programme carte.js");
 
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const btnCloseModal = document.querySelector(".close-modal");
-const btnsOpenModal = document.querySelectorAll(".show-modal");
+
 
 //Creation de la carte
 maCarte = L.map("map").setView([46.148358, -1.156659], 12.5);
