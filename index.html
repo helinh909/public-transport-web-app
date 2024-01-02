@@ -12,79 +12,78 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
+
     <link rel="stylesheet" href="css/style.css" />
-    <script src="js/axios.min.js" defer></script>
-    <script defer src="js/carte.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"
-    />
-    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="css/responsive.css" />
+
     <title>WayNav</title>
   </head>
   <body>
     <header>
       <div class="header">
         <a href="#" class="logo">WayNav</a>
+        <!--
         <input type="checkbox" id="check" />
         <label for="check" class="icons">
           <i class="bx bx-menu" id="menu-icon"></i>
           <i class="bx bx-x" id="close-icon"></i>
         </label>
-        <nav class="navbar">
-          <a href="#home">Home</a>
-          <a href="#services">Services</a>
-          <a href="#about">About</a>
-        </nav>
-      </div>
+      --></div>
     </header>
+
     <section class="section">
-      <div class="sidebar">
-        <h1 class="title_bar">La Rochelle</h1>
-        <div class="search">
-          <div class="search_bar">
-            <input
-              type="text"
-              placeholder="Départ"
-              class="search-input"
-              id="depart-input"
-            />
-            <ul id="depart-suggestions-list" class="suggestions-list"></ul>
-          </div>
-
-          <div class="search_bar">
-              <input type="text" id="destination-input" placeholder="Entrez votre destination" />
+      <div class="scroll-div">
+        <div class="sidebar">
+          <h1 class="title_bar">La Rochelle</h1>
+          <div class="search">
+            <h4>Saisissez votre destination</h4>
+            <div class="search_bar">
+              <input
+                type="text"
+                id="destination-input"
+                placeholder="Entrez votre destination"
+              />
               <ul id="suggestions-list" class="suggestions-list"></ul>
+            </div>
           </div>
-          <div class="MyButton">
-            <button><a href="#">Go</a></button>
-          </div>
-        </div>
 
-        <!-- Nouvelle section d'options de transport -->
-        <div class="transport-options">
-          <a href="#" class="transport-bus">
-            <div><i class="bx bxs-bus"></i> <b>Bus</b></div>
-          </a>
-          <a href="#" class="transport-horaire">
-            <div><i class="bx bx-walk"></i> <b>Marche</b></div>
-          </a>
-          <a href="#" class="transport-velo">
-            <div><i class="bx bx-cycling"></i><b> Vélo</b></div>
-          </a>
+          <!-- Nouvelle section d'options de transport -->
+          <div class="transport-options">
+            <a href="#" class="transport-bus">
+              <div><i class="bx bxs-bus"></i> <b>Bus</b></div>
+            </a>
+            <a href="#" class="transport-horaire">
+              <div><i class="bx bx-alarm"></i> <b>Horaires</b></div>
+            </a>
+            <a href="#" class="transport-velo">
+              <div><i class="bx bx-cycling"></i><b> Vélo</b></div>
+            </a>
+          </div>
+          <h2 class="suggéré"></h2>
+          <div class="recent-buses"></div>
+          <div class="recent-horaires"></div>
+          <div class="recent-stations"></div>
         </div>
-        <h2 class="suggéré"></h2>
-        <div class="recent-buses"></div>
-        <div class="recent-horaires"></div>
-        <div class="recent-stations"></div>
       </div>
-
-      <div id="map">
+      <div class="map" id="map">
         <button class="boutonRecentrage">
-          <img src="images/boutonRecentrage_icon.png" alt="boutonRecentrage" />
+          <img
+            class="img-map"
+            src="images/boutonRecentrage_icon.png"
+            alt="boutonRecentrage"
+          />
         </button>
       </div>
     </section>
   </body>
+  <script src="js/axios.min.js" defer></script>
+  <script defer src="js/style.js"></script>
+
+  <script defer src="js/carte.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"
+  />
+  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 </html>
