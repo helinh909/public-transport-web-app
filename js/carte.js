@@ -67,8 +67,13 @@ function recentrerPosition() {
 
 //--------------------------------------------------
 //les Velos
+
+const veloImage = new Image();
+veloImage.src = "images/velo_icon.png";
+veloImage.alt = "Description de l'icône de bus";
+
 const veloIcon = L.icon({
-  iconUrl: "images/velo_icon.png",
+  iconUrl: veloImage.src,
   iconSize: [25, 25],
 });
 function recupererVelos() {
@@ -552,7 +557,12 @@ function addOffsetToCoordinates(lat, lng, index) {
 }
 //----------------------------------------------------------
 //recuperer les donnees des arrets de bus
-const busIcon = L.icon({ iconUrl: "images/bus_icon.png", iconSize: [25, 25] });
+const busImage = new Image();
+busImage.src = "images/bus_icon.png";
+busImage.alt = "Description de l'icône de bus";
+
+const busIcon = L.icon({iconUrl:busImage.src ,iconSize: [25, 25],});
+
 async function recupererDonneesArretsDeBus() {
   try {
     const response = await fetch(
