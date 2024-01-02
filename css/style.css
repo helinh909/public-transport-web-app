@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
-
+/* GENERAL */
 * {
   margin: 0;
   padding: 0;
@@ -32,10 +32,6 @@ body {
   margin: auto 0 auto 0;
 }
 
-#check {
-  display: none;
-}
-
 .icons {
   position: absolute;
   right: 5%;
@@ -58,11 +54,6 @@ body {
 
 /* scroll Bar */
 .scroll-div {
-  width: 40rem;
-  overflow-y: scroll;
-}
-
-.scroll-div2 {
   width: 40rem;
   overflow-y: scroll;
 }
@@ -116,33 +107,7 @@ h4 {
   border-radius: 1rem;
 }
 
-/* .search button {
-  width: 7rem;
-  height: 3rem;
-  border-radius: 35px;
-  border: none;
-  background-color: rgb(223, 126, 37);
-  color: white;
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-transform: uppercase;
-  text-align: center;
-  left: 50%;
-  top: 50%;
-} */
-/* .search a {
-  text-decoration: none;
-  color: #fff;
-}
-.search button:hover {
-  background-color: transparent;
-  border: 1px solid rgb(223, 126, 37);
-}
-.search a button:hover {
-  text-decoration: none;
-  color: rgb(223, 126, 37);
-} */
-/* GENERAL */
+
 
 /* MAP */
 .map {
