@@ -719,7 +719,6 @@ async function traiterDonnees() {
         horaires.records,
         lignes.records
       );
-      //console.log('Données arrêts, horaires et lignes:', donneesJointes);
       let BusStopCentrer;
       centrerArret(BusStopCentrer, donneesJointes);
 
