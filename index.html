@@ -4,39 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+    
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/responsive.css" />
+    <script src="js/axios.min.js" defer></script>    
+    <script defer src="js/carte.js"></script>
+
+    <script defer src="js/style.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <title>WayNav</title>
   </head>
   <body>
     <header>
       <div class="header">
-        <a href="#" class="logo">WayNav</a>
-        <!--
-        <input type="checkbox" id="check" />
-        <label for="check" class="icons">
-          <i class="bx bx-menu" id="menu-icon"></i>
-          <i class="bx bx-x" id="close-icon"></i>
-        </label>
-      --></div>
+        <a href="#" class="logo">WayNav</a>        
+        <h1 class="header-title">La Rochelle</h1>
+      </div>
     </header>
 
     <section class="section">
       <div class="scroll-div">
         <div class="sidebar">
-          <h1 class="title_bar">La Rochelle</h1>
           <div class="search">
-            <h4>Saisissez votre destination</h4>
+            <h4 class="title_search">Saisissez votre destination</h4>
             <div class="search_bar">
               <input
                 type="text"
@@ -49,13 +44,13 @@
 
           <!-- Nouvelle section d'options de transport -->
           <div class="transport-options">
-            <a href="#" class="transport-bus">
+            <a href="#" class="transport-bus" role="button">
               <div><i class="bx bxs-bus"></i> <b>Bus</b></div>
             </a>
-            <a href="#" class="transport-horaire">
+            <a href="#" class="transport-horaire" role="button">
               <div><i class="bx bx-alarm"></i> <b>Horaires</b></div>
             </a>
-            <a href="#" class="transport-velo">
+            <a href="#" class="transport-velo" role="button">
               <div><i class="bx bx-cycling"></i><b> Vélo</b></div>
             </a>
           </div>
@@ -70,20 +65,10 @@
           <img
             class="img-map"
             src="images/boutonRecentrage_icon.png"
-            alt="boutonRecentrage"
+            alt="recentrage"
           />
         </button>
       </div>
     </section>
   </body>
-  <script src="js/axios.min.js" defer></script>
-  <script defer src="js/style.js"></script>
-
-  <script defer src="js/carte.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css"
-  />
-  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 </html>
