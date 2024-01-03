@@ -1,6 +1,4 @@
-console.log("Exécution du programme carte.js");
-
-
+//console.log("Exécution du programme carte.js");
 
 //Creation de la carte
 maCarte = L.map("map").setView([46.148358, -1.156659], 12.5);
@@ -37,7 +35,6 @@ function obtenirPosition(callback) {
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
         maPosition.setLatLng([latitude, longitude]);
-        positionUtilisee = position;
         callback(position);
       },
       (error) => {
@@ -75,6 +72,7 @@ veloImage.alt = "Description de l'icône de bus";
 const veloIcon = L.icon({
   iconUrl: veloImage.src,
   iconSize: [25, 25],
+  alt : veloImage.alt,
 });
 function recupererVelos() {
   const promesseRecupVelo = axios.get(
@@ -110,7 +108,7 @@ function afficherPositionsVelo(reponseAjax) {
           arret.fields.station_latitude.replace(",", "."),
           arret.fields.station_longitude.replace(",", "."),
         ],
-        { icon: veloIcon }
+        { icon: veloIcon, alt : veloImage.alt}
       ).bindPopup(
         "Nom de la station : " +
           arret.fields.station_nom +
@@ -131,7 +129,11 @@ function afficherPositionsVelo(reponseAjax) {
 //Les bus
 let markersBus;
 function afficherPositionsBus(response) {
+  let coordBus = [];
   const nomArret = response;
+  nomArret.records.forEach((arret)=>{    
+      coordBus.push({latitude: arret.fields.stop_lat, longitude:arret.fields.stop_lon, nom:arret.fields.stop_name, parentStation : arret.fields.parent_station })
+  })
   markersBus = new L.MarkerClusterGroup({
     maxClusterRadius: 15,
     removeOutsideVisibleBounds: true,
@@ -139,12 +141,12 @@ function afficherPositionsBus(response) {
       return busIcon;
     },
   });
-  nomArret.records.forEach((arret) => {
-    markersBus.addLayer(
-      L.marker([arret.fields.stop_lat, arret.fields.stop_lon], {
-        icon: busIcon,
-      }).bindPopup("arret: " + arret.fields.stop_name)
-    );
+  coordBus.forEach((arret) => {
+    if (arret.parentStation!== ""){
+      markersBus.addLayer(
+        L.marker([arret.latitude, arret.longitude], {icon: busIcon, alt:"marqueur"}).bindPopup("<strong>Arrêt : </strong>" + arret.nom)
+      );
+    }
   });
   maCarte.addLayer(markersBus);
 }
@@ -152,30 +154,19 @@ function afficherPositionsBus(response) {
 
 let marqueurBusProche;
 
-function centrerArret(nomArret, response) {
+function centrerArret(nomArret, response){
   const arretBus = response;
-  arretBus.forEach((arret) => {
-    if (nomArret == arret.donneesArrets.fields.stop_name) {
+  arretBus.forEach(arret => {
+    if (nomArret==arret.donneesArrets.fields.stop_name){
       if (arretSelectionne) {
         maCarte.removeLayer(arretSelectionne);
       }
-      const marqueurBusProche = L.marker(
-        [
-          arret.donneesArrets.fields.stop_lat,
-          arret.donneesArrets.fields.stop_lon,
-        ],
-        { icon: busIcon }
-      ).bindPopup(`<strong>${arret.donneesArrets.fields.stop_name}</strong>`);
+      const marqueurBusProche = L.marker([arret.donneesArrets.fields.stop_lat, arret.donneesArrets.fields.stop_lon], { icon: busIcon })
+      .bindPopup(`<strong>${arret.donneesArrets.fields.stop_name}</strong>`);
 
-      maCarte.setView(
-        [
-          arret.donneesArrets.fields.stop_lat,
-          arret.donneesArrets.fields.stop_lon,
-        ],
-        16.5
-      );
-      maCarte.addLayer(marqueurBusProche);
-      marqueurBusProche.openPopup();
+    maCarte.setView([arret.donneesArrets.fields.stop_lat, arret.donneesArrets.fields.stop_lon], 16.5);
+    maCarte.addLayer(marqueurBusProche);
+    marqueurBusProche.openPopup();
     }
   });
 }
@@ -218,12 +209,13 @@ function centrerArretVelos(nomArret, response) {
   });
 }
 
-function centretArretSelectionne(ev, busStopsData) {
+function centrerArretSelectionne(ev, busStopData) {
   const selectedStationName = ev.target;
   const contenuStation = selectedStationName.textContent;
-  centrerArret(contenuStation, busStopsData);
+  centrerArret(contenuStation, busStopData);
   supprimerHoraires();
-  afficherHorairesProches(contenuStation, busStopsData);
+  afficherHorairesProches(contenuStation, busStopData);
+  colorerFond(lienHoraire, lienBus, lienVelo);
 }
 
 function calculerDistance(lat, long, maLatitude, maLongitude, callback) {
@@ -246,55 +238,41 @@ function degresVersRadians(degrees) {
   return degrees * (Math.PI / 180);
 }
 
-function afficherArretsPlusProches(response) {
+const lienBus = document.querySelector(".transport-bus");
+const lienVelo = document.querySelector(".transport-velo");
+const lienHoraire = document.querySelector(".transport-horaire");
+
+function afficherArretsPlusProches(response){
   const arretBus = response;
   let arretsDistance = [];
-  let count = 0;
+  let count =0;
 
   obtenirPosition((position) => {
-    const maLatitude = position.coords.latitude;
-    const maLongitude = position.coords.longitude;
-    arretBus.forEach((arret) => {
-      calculerDistance(
-        arret.donneesArrets.fields.stop_lat,
-        arret.donneesArrets.fields.stop_lon,
-        maLatitude,
-        maLongitude,
-        (distance) => {
+    if(position){      
+      const maLatitude = position.coords.latitude;
+      const maLongitude = position.coords.longitude;
+      arretBus.forEach((arret) => {
+
+        calculerDistance(arret.donneesArrets.fields.stop_lat, arret.donneesArrets.fields.stop_lon, maLatitude, maLongitude, (distance) =>{
           // gerer les doublons
-          const doubleArret = arretsDistance.findIndex(
-            (element) =>
-              element.nomArret === arret.donneesArrets.fields.stop_name
-          );
+          const doubleArret = arretsDistance.findIndex(element => element.nomArret === arret.donneesArrets.fields.stop_name);
           if (doubleArret === -1) {
-            arretsDistance.push({
-              nomArret: arret.donneesArrets.fields.stop_name,
-              distance: Math.round(distance * 10),
-            });
+            arretsDistance.push({ nomArret: arret.donneesArrets.fields.stop_name, distance:(Math.round(distance *10))})
           }
-          count++;
-          if (count == arretBus.length) {
+          count ++;
+          if (count == arretBus.length){
             arretsDistance.sort((a, b) => a.distance - b.distance);
-            ajouterArretProche(
-              arretsDistance[0].nomArret,
-              arretsDistance[0].distance,
-              response
-            );
-            ajouterArretProche(
-              arretsDistance[1].nomArret,
-              arretsDistance[1].distance,
-              response
-            );
-            ajouterArretProche(
-              arretsDistance[2].nomArret,
-              arretsDistance[2].distance,
-              response
-            );
+            ajouterArretProche(arretsDistance[0].nomArret,arretsDistance[0].distance,response);
+            ajouterArretProche(arretsDistance[1].nomArret,arretsDistance[1].distance,response);
+            ajouterArretProche(arretsDistance[2].nomArret,arretsDistance[2].distance,response);
           }
-        }
-      );
-    });
-  });
+      })});
+    }
+    else{
+      afficherErreurLocalisation(sectionBus,"bus");
+    }
+  });   
+  lienBus.style.backgroundColor = "#e0e0e0";
 }
 
 let clicBus = false;
@@ -303,35 +281,42 @@ const sectionBus = document.querySelector(".recent-buses");
 const sectionVelos = document.querySelector(".recent-stations");
 const sectionHoraires = document.querySelector(".recent-horaires");
 
-function ajouterArretProche(element, distance, response) {
-  const busProche = document.createElement("div");
-  busProche.classList.add("recent-bus");
-  const aBus = document.createElement("a");
-  aBus.classList.add("recent-bus-link");
+function afficherErreurLocalisation(section, type) {
+  const stations = document.createElement('div');
+  stations.classList.add(`recent-${type}`);
+  const stationElement = document.createElement('p');
+  stationElement.classList.add("no-station");
+  stationElement.textContent = "Impossible de déterminer votre position. Veuillez actualiser la page pour permettre la localisation.";
+  stations.appendChild(stationElement);
+  section.appendChild(stations);
+}
 
-  const distanceBus = document.createElement("p");
-  distanceBus.classList.add("distance-bus");
-  distanceBus.textContent = distance * 100 + " m ";
+function ajouterArretProche(element, distance, response){  
+  const busProche = document.createElement('div');
+  busProche.classList.add('recent-bus');
+  const aBus = document.createElement('a');
+  aBus.classList.add('recent-bus-link');
+  aBus.setAttribute('role', 'button');  
+  aBus.setAttribute('tabindex', '0');
 
-  const nomBus = document.createElement("p");
-  nomBus.classList.add("name-bus");
+  const distanceBus = document.createElement('p');
+  distanceBus.classList.add('distance-bus');
+  distanceBus.textContent = distance*100 + " m ";
+
+  const nomBus = document.createElement('p');
+  nomBus.classList.add('name-bus');
   nomBus.textContent = element;
 
   busProche.appendChild(distanceBus);
   busProche.appendChild(nomBus);
-  aBus.appendChild(busProche);
-  sectionBus.appendChild(aBus);
+  aBus.appendChild(busProche)
+  sectionBus.appendChild(aBus); 
+  
+  titreSuggere.textContent = "Recommandés";
 
-  titreSuggere.textContent = "Les plus proches";
-
-  aBus.addEventListener("click", () => {
-    clicBus = true;
-    centrerArret(element, response);
-  });
-  aBus.addEventListener("click", supprimerHoraires);
-  aBus.addEventListener("click", () =>
-    afficherHorairesProches(element, response)
-  );
+  aBus.addEventListener('click', () =>{clicBus = true;centrerArret(element, response)});
+  aBus.addEventListener('click', supprimerHoraires);
+  aBus.addEventListener('click', () =>{afficherHorairesProches(element, response); colorerFond(lienHoraire, lienBus, lienVelo)});
 }
 
 function estProche(heure1, minute1, heure2, minute2) {
@@ -339,64 +324,38 @@ function estProche(heure1, minute1, heure2, minute2) {
   const minutes2 = heure2 * 60 + minute2;
   return Math.abs(minutes1 - minutes2) < 5;
 }
-function afficherHorairesProches(nomArret, response) {
+function afficherHorairesProches(nomArret,response){
   const arretBus = response;
   let horaires = [];
-  arretBus.forEach((arret) => {
-    if (nomArret == arret.donneesArrets.fields.stop_name) {
-      const minutes = parseInt(
-        arret.donneesHorairesBus.fields.departure_time.substring(3, 5)
-      );
-      const heures = parseInt(
-        arret.donneesHorairesBus.fields.departure_time.substring(0, 2)
-      );
+  arretBus.forEach(arret => {
+    if (nomArret==arret.donneesArrets.fields.stop_name){
+      const minutes = parseInt(arret.donneesHorairesBus.fields.departure_time.substring(3, 5));
+      const heures = parseInt(arret.donneesHorairesBus.fields.departure_time.substring(0, 2));        
       const destinationActuelle = arret.donneesLignes.fields.trip_headsign;
-      if (
-        !horaires.some(
-          (item) =>
-            item.horaire.substring(0, 5) ===
-              arret.donneesHorairesBus.fields.departure_time.substring(0, 5) ||
-            (estProche(
-              parseInt(item.horaire.substring(0, 2)),
-              parseInt(item.horaire.substring(3, 5)),
-              heures,
-              minutes
-            ) &&
-              destinationActuelle === item.arrivee)
-        )
-      ) {
-        horaires.push({
-          horaire: arret.donneesHorairesBus.fields.departure_time.substring(
-            0,
-            5
-          ),
-          ligne: arret.donneesLignes.fields.route_id.slice(1),
-          arrivee: destinationActuelle,
-          nom: arret.donneesArrets.fields.stop_name,
-        });
+      if (!horaires.some(item =>
+        (item.horaire.substring(0, 5) === arret.donneesHorairesBus.fields.departure_time.substring(0, 5)) ||
+        (estProche(parseInt(item.horaire.substring(0, 2)),parseInt(item.horaire.substring(3, 5)), heures,minutes) &&
+        destinationActuelle === item.arrivee))) {
+        horaires.push({horaire : arret.donneesHorairesBus.fields.departure_time.substring(0, 5), ligne : arret.donneesLignes.fields.route_id.slice(1), arrivee : destinationActuelle, nom: arret.donneesArrets.fields.stop_name })
       }
     }
   });
   let horaireProche = false;
   for (let i = 0; i < 8; i++) {
-    if (!horaires[0] && !horaireProche) {
-      const horaires = document.createElement("div");
-      horaires.classList.add("recent-horaire");
-      const horaireBus = document.createElement("p");
+    if (!horaires[0] && !horaireProche){
+      const horaireDiv = document.createElement('div');
+      horaireDiv.classList.add('recent-horaire');
+      const horaireBus = document.createElement('p');
       horaireBus.classList.add("no-horaire");
       horaireBus.textContent = "Aucun horaire disponible";
-      horaires.appendChild(horaireBus);
-      sectionHoraires.appendChild(horaires);
+      horaireDiv.appendChild(horaireBus);
+      sectionHoraires.appendChild(horaireDiv);
       horaireProche = true;
-      afficherSection(sectionHoraires, sectionBus, sectionVelos);
+      clicBus = true;
+      afficherSection(sectionHoraires,sectionBus,sectionVelos);
     }
-    if (horaires[i]) {
-      ajouterHoraires(
-        horaires[i].horaire,
-        horaires[i].ligne,
-        horaires[i].arrivee,
-        horaires[i].nom
-      );
+    if (horaires[i]){
+      ajouterHoraires(horaires[i].horaire, horaires[i].ligne, horaires[i].arrivee, horaires[i].nom);
     }
   }
 }
@@ -439,7 +398,9 @@ function ajouterStationProche(element, distance, response) {
   const stationProche = document.createElement("div");
   stationProche.classList.add("recent-station");
   const aVelos = document.createElement("a");
-  aVelos.classList.add("recent-bus-link");
+  aVelos.classList.add("recent-bus-link");  
+  aVelos.setAttribute('role', 'button');  
+  aVelos.setAttribute('tabindex', '0');
 
   const distanceVelo = document.createElement("p");
   distanceVelo.classList.add("distance-station");
@@ -458,88 +419,78 @@ function ajouterStationProche(element, distance, response) {
 }
 
 //afficher le velo le plus proche
-function afficherVeloPlusProches(response) {
+function afficherVeloPlusProches(response){
   const stationVelo = response.data;
   let veloDistance = [];
-  let count = 0;
-
+  let count =0;
+  
   obtenirPosition((position) => {
-    const maLat = parseFloat(position.coords.latitude);
-    const maLong = parseFloat(position.coords.longitude);
+    if(position){
+      const maLat = parseFloat(position.coords.latitude);
+      const maLong = parseFloat(position.coords.longitude);
 
-    stationVelo.records.forEach((velo) => {
-      const veloLatitude = parseFloat(
-        velo.fields.station_latitude.replace(",", ".")
-      );
-      const veloLongitude = parseFloat(
-        velo.fields.station_longitude.replace(",", ".")
-      );
-
-      calculerDistance(
-        veloLatitude,
-        veloLongitude,
-        maLat,
-        maLong,
-        (distance) => {
-          veloDistance.push({
-            nomStation: velo.fields.station_nom,
-            distance: Math.round(distance * 10),
-          });
-          count++;
-          if (count == stationVelo.records.length) {
+      stationVelo.records.forEach((velo) => {
+        const veloLatitude = parseFloat(velo.fields.station_latitude.replace(',', '.'));
+        const veloLongitude = parseFloat(velo.fields.station_longitude.replace(',', '.'));
+      
+        calculerDistance(veloLatitude, veloLongitude, maLat, maLong, (distance) =>{
+          veloDistance.push({ nomStation: velo.fields.station_nom, distance:Math.round(distance *10)})
+          count ++;
+          if (count == stationVelo.records.length){
             veloDistance.sort((a, b) => a.distance - b.distance);
-            ajouterStationProche(
-              veloDistance[0].nomStation,
-              veloDistance[0].distance,
-              response
-            );
-            ajouterStationProche(
-              veloDistance[1].nomStation,
-              veloDistance[1].distance,
-              response
-            );
-            ajouterStationProche(
-              veloDistance[2].nomStation,
-              veloDistance[2].distance,
-              response
-            );
+            ajouterStationProche(veloDistance[0].nomStation,veloDistance[0].distance,response);
+            ajouterStationProche(veloDistance[1].nomStation,veloDistance[1].distance,response);
+            ajouterStationProche(veloDistance[2].nomStation,veloDistance[2].distance,response);
           }
-        }
-      );
-    });
-  });
+      })});
+    }
+    else{
+      afficherErreurLocalisation(sectionVelos, "station");
+    }
+  });  
   sectionVelos.classList.add("invisible");
+
 }
 
 //-----------------------------------------------
 
 let arretSelectionne;
 
-const lienVelo = document.querySelector(".transport-velo");
-const lienBus = document.querySelector(".transport-bus");
-const lienHoraire = document.querySelector(".transport-horaire");
+lienHoraire.addEventListener("click", () =>afficherSection(sectionHoraires,sectionBus,sectionVelos,"Horaires"));
+lienBus.addEventListener("click", () =>afficherSection(sectionBus,sectionHoraires,sectionVelos, "Recommandés"));
+lienVelo.addEventListener("click",() => afficherSection(sectionVelos,sectionBus,sectionHoraires,"Les plus proches"));
 
-lienHoraire.addEventListener("click", () =>
-  afficherSection(sectionHoraires, sectionBus, sectionVelos)
-);
-lienBus.addEventListener("click", () =>
-  afficherSection(sectionBus, sectionHoraires, sectionVelos)
-);
-lienVelo.addEventListener("click", () =>
-  afficherSection(sectionVelos, sectionBus, sectionHoraires)
-);
-
-function afficherSection(section1, section2, section3, titre) {
-  if (!clicBus && section1 == sectionHoraires) {
-    titreSuggere.textContent = "Veuillez sélectionner un arrêt";
-  } else if (clicBus && section1 == sectionHoraires) {
-    titreSuggere.textContent = "Horaires";
-  } else {
-    titreSuggere.textContent = "Les plus proches";
+let clicHoraire = false;
+function afficherSection(section1, section2, section3, titre){
+  titreSuggere.textContent = titre;
+  if(!clicBus && section1==sectionHoraires && !clicHoraire){
+    const horaires = document.createElement('div');
+    horaires.classList.add('recent-horaire');
+    const horaireBus = document.createElement('p');
+    horaireBus.classList.add("no-horaire");
+    horaireBus.textContent = "Aucun arrêt n'est sélectionné";
+    horaires.appendChild(horaireBus);
+    sectionHoraires.appendChild(horaires);
+    clicHoraire=true;    
   }
-  section1.classList.remove("invisible");
-  section2.classList.add("invisible");
-  section3.classList.add("invisible");
+  if(section1 == sectionHoraires){
+    colorerFond(lienHoraire,lienBus,lienVelo);
+  }
+  else if(section1 == sectionBus){
+    colorerFond(lienBus,lienHoraire,lienVelo);
+  }
+  else if(section1 == sectionVelos){
+    colorerFond(lienVelo,lienBus,lienHoraire);
+  }
+  section1.classList.remove("invisible");    
+  section2.classList.add("invisible");   
+  section3.classList.add('invisible');  
+}
+
+function colorerFond(element1,element2, element3){  
+  element1.style.backgroundColor = "#e0e0e0";
+  element2.style.backgroundColor = "#FFFFFF";  
+  element3.style.backgroundColor = "#FFFFFF";
 }
 
 function supprimerHoraires() {
@@ -557,6 +508,9 @@ function addOffsetToCoordinates(lat, lng, index) {
 }
 //----------------------------------------------------------
 //recuperer les donnees des arrets de bus
+
+let stationsName = [];
+
 const busImage = new Image();
 busImage.src = "images/bus_icon.png";
 busImage.alt = "Description de l'icône de bus";
@@ -565,116 +519,107 @@ const busIcon = L.icon({iconUrl:busImage.src ,iconSize: [25, 25],});
 
 async function recupererDonneesArretsDeBus() {
   try {
-    const response = await fetch(
-      "https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id"
-    );
+    const response = await fetch("https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id" );
     if (!response.ok) {
-      throw new Error("Network response was not ok.");
+      throw new Error("La réponse du réseau n'est pas valide.");
     }
     const busStopsData = await response.json();
     afficherPositionsBus(busStopsData);
 
+    busStopsData.records.forEach((arret) => {
+      const doubleArret = stationsName.findIndex(element => element.name === arret.fields.stop_name);
+      if (doubleArret === -1) {
+        stationsName.push(
+          {stop: arret.fields.stop_id,
+          name: arret.fields.stop_name,
+          latitude: parseFloat(arret.fields.stop_lat.split(",")[0]), //split-> liste separée par des virgules
+          longitude: parseFloat(arret.fields.stop_lon.split(",")[1]), //str to float})
+          }     
+      )}     
+    }) 
+
+    //la selection contiendra le nom des stations
+    stationsName.forEach((station) => {
+      const option = document.createElement("option");  
+      option.value = station.name;      
+      option.textContent = station.name;
+    });   
+
     return busStopsData;
   } catch (error) {
-    console.error("Error fetching bus stop data:", error);
+    console.error("Erreur lors de la récupération des données des arrêts de bus", error);
     return null;
   }
 }
 //-----------------------------------------------------------
 // Fetch pour les noms des stations
-let stationsName = [];
+
 const destinationInput = document.getElementById("destination-input");
 const suggestionsList = document.getElementById("suggestions-list");
 // Assuming you have a select element for arrival
 const arrivalSelect = document.getElementById("suggestions-list");
 
-fetch(
-  "https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id"
-)
-  .then((response) => response.json())
-  .then((stationData) => {
-    stationData.records.forEach((arret) => {
-      const doubleArret = stationsName.findIndex(
-        (element) => element.name === arret.fields.stop_name
-      );
-      if (doubleArret === -1) {
-        stationsName.push({
-          stop: arret.fields.stop_id,
-          name: arret.fields.stop_name,
-          latitude: parseFloat(arret.fields.stop_lat.split(",")[0]), //split-> liste separer par des virgules
-          longitude: parseFloat(arret.fields.stop_lon.split(",")[1]), //str to float})
-        });
-      }
-    });
-    //la selection contiendra le nom des stations
-    stationsName.forEach((station) => {
-      const option = document.createElement("option");
-      option.value = station.name;
-      option.textContent = station.name;
-    });
+let selectedSuggestionIndex = -1;
 
-    let selectedSuggestionIndex = -1;
+destinationInput.addEventListener("input", function () {
+  const searchTerm = destinationInput.value.toLowerCase();
+  const filteredStations = stationsName.filter((station) =>
+    station.name.toLowerCase().startsWith(searchTerm)
+  );
+  displaySuggestions(filteredStations);
+});
 
-    destinationInput.addEventListener("input", function () {
-      const searchTerm = destinationInput.value.toLowerCase();
-      const filteredStations = stationsName.filter((station) =>
-        station.name.toLowerCase().startsWith(searchTerm)
-      );
-      displaySuggestions(filteredStations);
-    });
+destinationInput.addEventListener("keyup", function (event) {
+  const suggestions = document.querySelectorAll(".suggestions-list li");
+});
 
-    destinationInput.addEventListener("keyup", function (event) {
-      const suggestions = document.querySelectorAll(".suggestions-list li");
-    });
-    function displaySuggestions(suggestions) {
+function displaySuggestions(suggestions) {
+  suggestionsList.innerHTML = "";
+
+  suggestions.forEach((station, index) => {
+    const suggestionItem = document.createElement("li");
+    suggestionItem.textContent = station.name;
+    suggestionsList.appendChild(suggestionItem);
+
+    suggestionItem.addEventListener("click", () => {
+      destinationInput.value = station.name;
       suggestionsList.innerHTML = "";
+      selectedSuggestionIndex = -1;
+      destinationInput.blur();
+    });
 
-      suggestions.forEach((station, index) => {
-        const suggestionItem = document.createElement("li");
-        suggestionItem.textContent = station.name;
-        suggestionsList.appendChild(suggestionItem);
-
-        suggestionItem.addEventListener("click", () => {
-          destinationInput.value = station.name;
-          centrerArret(station.name, busStopsData);
-          suggestionsList.innerHTML = "";
-          selectedSuggestionIndex = -1;
-          destinationInput.blur();
-        });
-
-        suggestionItem.addEventListener("mouseover", () => {
-          suggestionItem.classList.add("highlight");
-        });
-        suggestionItem.addEventListener("mouseout", () => {
-          suggestionItem.classList.remove("highlight");
-        });
-      });
-
-      updateSuggestionHighlight();
-    }
-
-    function updateSuggestionHighlight() {
-      const suggestions = document.querySelectorAll(".suggestions-list li");
-
-      suggestions.forEach((suggestion, index) => {
-        if (index === selectedSuggestionIndex) {
-          suggestion.classList.add("selected");
-        } else {
-          suggestion.classList.remove("selected");
-        }
-        if (suggestion.contains(document.activeElement)) {
-          suggestion.classList.add("highlight");
-        } else {
-          suggestion.classList.remove("highlight");
-        }
-      });
-    }
-    destinationInput.addEventListener("blur", () => {
-      suggestionListTimeout = setTimeout(() => {
-        suggestionsList.innerHTML = "";
-      }, 200);
+    suggestionItem.addEventListener("mouseover", () => {
+      suggestionItem.classList.add("highlight");
+    });
+    suggestionItem.addEventListener("mouseout", () => {
+      suggestionItem.classList.remove("highlight");
     });
   });
+
+  updateSuggestionHighlight();
+}
+
+function updateSuggestionHighlight() {
+  const suggestions = document.querySelectorAll(".suggestions-list li");
+
+  suggestions.forEach((suggestion, index) => {
+    if (index === selectedSuggestionIndex) {
+      suggestion.classList.add("selected");
+    } else {
+      suggestion.classList.remove("selected");
+    }
+    if (suggestion.contains(document.activeElement)) {
+      suggestion.classList.add("highlight");
+    } else {
+      suggestion.classList.remove("highlight");
+    }
+  });
+}
+destinationInput.addEventListener("blur", () => {
+  suggestionListTimeout = setTimeout(() => {
+    suggestionsList.innerHTML = "";
+  }, 200);
+});
 
 //------------------------------------------------------
 
@@ -689,24 +634,22 @@ async function recupererDonneesHoraires() {
   try {
     const response = await fetch(urlHoraires);
     if (!response.ok) {
-      throw new Error("Network response was not ok.");
+      throw new Error("La réponse du réseau n'est pas valide.");
     }
     const busStopsData = await response.json();
 
     return busStopsData;
   } catch (error) {
-    console.error("Error fetching bus stop data:", error);
+    console.error("Erreur lors de la récupération des données des arrêts de bus:", error);
     return null;
   }
 }
 
 async function recupererDonneesLignes() {
   try {
-    const response = await fetch(
-      "https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_trips_des_bus&rows=5550&facet=route_id"
-    );
+    const response = await fetch("https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_trips_des_bus&rows=5550&facet=route_id");
     if (!response.ok) {
-      throw new Error("Network response was not ok.");
+      throw new Error("La réponse du réseau n'est pas valide.");
     }
     const busStopsData = await response.json();
 
@@ -719,51 +662,34 @@ async function recupererDonneesLignes() {
 
 async function traiterDonnees() {
   try {
-    const arrets = await recupererDonneesArretsDeBus();
-    const horaires = await recupererDonneesHoraires();
-    const lignes = await recupererDonneesLignes();
+      const arrets = await recupererDonneesArretsDeBus();
+      const horaires = await recupererDonneesHoraires();
+      const lignes = await recupererDonneesLignes();
 
-    if (arrets && horaires && lignes) {
-      const donneesJointes = rejoindreDonnees(
-        arrets.records,
-        horaires.records,
-        lignes.records
-      );
-      let BusStopCentrer;
-      centrerArret(BusStopCentrer, donneesJointes);
-
-      arrivalSelect.addEventListener("click", (ev) =>
-        centretArretSelectionne(ev, donneesJointes)
-      );
-      arrivalSelect.addEventListener("click", () => {
-        clicBus;
-        true, afficherHorairesProches(element, response);
-      });
-      afficherArretsPlusProches(donneesJointes);
-      const lienHoraire = document.querySelector(".transport-marche");
-    }
+      if (arrets && horaires && lignes) {
+          const donneesJointes = rejoindreDonnees(arrets.records, horaires.records, lignes.records);
+          //console.log('Données arrêts, horaires et lignes:', donneesJointes);
+          let BusStopCentrer;
+          centrerArret(BusStopCentrer,donneesJointes);
+          let element;
+          arrivalSelect.addEventListener("click", (ev) => {centrerArretSelectionne(ev, donneesJointes)});
+          afficherArretsPlusProches(donneesJointes);
+          const lienHoraire = document.querySelector(".transport-marche");
+      }
   } catch (error) {
-    console.error("Erreur:", error);
+      console.error("Erreur:", error);
   }
 }
 
 function rejoindreDonnees(arrets, horaires, lignes) {
-  tableauDonnees = [];
-  horaires.forEach((arret) => {
+  tableauDonnees = []
+  horaires.forEach(arret=>{
     const stopId = arret.fields.stop_id;
-    const arretCorrespondant = arrets.find(
-      (arret) => arret.fields.stop_id === stopId
-    );
-    const ligneCorrespondante = lignes.find(
-      (ligne) => ligne.fields.trip_id === arret.fields.trip_id
-    );
+    const arretCorrespondant = arrets.find(arret => arret.fields.stop_id === stopId);
+    const ligneCorrespondante = lignes.find(ligne => ligne.fields.trip_id === arret.fields.trip_id);
 
     if (arretCorrespondant) {
-      const infos = {
-        donneesHorairesBus: arret,
-        donneesArrets: arretCorrespondant,
-        donneesLignes: ligneCorrespondante,
-      };
+      const infos = {donneesHorairesBus : arret, donneesArrets : arretCorrespondant, donneesLignes: ligneCorrespondante}
       tableauDonnees.push(infos);
     }
   });
@@ -773,26 +699,3 @@ traiterDonnees();
 
 //------------------------------------------------------
 
-const openModal = function () {
-  modal.classList.remove("hidden");
-  overlay.classList.remove("hidden");
-};
-
-const closeModal = function () {
-  modal.classList.add("hidden");
-  overlay.classList.add("hidden");
-};
-
-for (let i = 0; i < btnsOpenModal.length; i++)
-  btnsOpenModal[i].addEventListener("click", openModal);
-
-btnCloseModal.addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal);
-
-document.addEventListener("keydown", function (e) {
-  // console.log(e.key);
-
-  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-    closeModal();
-  }
-});

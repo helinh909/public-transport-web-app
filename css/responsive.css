@@ -7,7 +7,7 @@
   }
   .search {
   }
-  .map {
+  #map {
     min-height: 70vh;
     width: 100%;
     border-radius: 1rem;
@@ -23,5 +23,8 @@
   .header {
     display: flex;
     justify-content: center;
+  }
+	.logo {
+    margin: 0 1rem 0 0;    
   }
 }

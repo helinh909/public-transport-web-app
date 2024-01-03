@@ -6,11 +6,13 @@
   box-sizing: inherit;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
-  box-sizing: border-box;
 }
-
 body {
-  font-size: 14px;
+  background-color: #274570;
+}
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
 }
 .suggestions-list li.highlight {
   background-color: #a0d3ff; /* Changez la couleur de fond pour indiquer le survol */
@@ -20,16 +22,25 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1.3rem 10%;
+  padding: 1.3rem 0;
   background: rgb(15, 40, 90);
+  display: flex;
+  justify-content: space-between;
 }
 
 .logo {
-  font-size: 1.3rem;
+  font-size: 2rem;
   color: #fff;
   text-decoration: none;
   font-weight: 700;
-  margin: auto 0 auto 0;
+  margin: auto 1em auto 7em;
+}
+
+.header-title{
+  font-size: 2rem;
+  color: #fff;  
+  font-weight: 700;  
+  margin-right: 2em;
 }
 
 .icons {
@@ -46,39 +57,33 @@ body {
   font-weight: 400;
   height: 92vh;
   background-color: #fff;
+  background-color: rgb(64, 104, 161);  
   display: flex;
-  flex-direction: row;
-  background-color: rgb(64, 104, 161);
   /* flex-direction: column; */
 }
 
 /* scroll Bar */
-.scroll-div {
-  width: 40rem;
+.scroll-div {  
+  background-color:#274570;
+  width: 40rem;  
   overflow-y: scroll;
 }
 
 /* SIDEBAR */
-.sidebar {
+.sidebar {    
   width: 100%;
-  background-color: rgb(64, 104, 161);
-  padding: 2rem 3rem 2rem 3rem;
+  background-color:#274570;
+  padding: 3rem 5rem 4rem 5rem;
   display: flex;
   flex-direction: column;
 }
 
-.title_bar {
-  align-self: center;
-  margin-bottom: 1.5rem;
-  color: #fff;
-}
-
 h4 {
-  font-size: 1.4em;
+  font-size: 1.5em;
   font-weight: 600;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
-  color: rgb(130, 130, 130);
+  color: #274570;
 }
 
 .search {
@@ -86,7 +91,11 @@ h4 {
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;  
+  padding-top: 1.5rem;  
+  padding-bottom: 0.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
 }
 .search_bar {
   position: relative;
@@ -101,18 +110,21 @@ h4 {
 .search_bar input {
   width: 100%;
   height: auto;
+  font-size: 1.4rem;
   border: none;
-  padding: 10px;
+  padding-top: 0.7rem;
+  padding-left: 2rem;
   outline: none;
+  margin-bottom: 0.5rem;
   border-radius: 1rem;
 }
 
 
-
 /* MAP */
-.map {
+#map {
   height: 100%;
-  width: 100%;
+  width: 71%;
+  flex-grow: 1;
 }
 /* transport option */
 .transport-options {
@@ -120,7 +132,6 @@ h4 {
   margin-top: 2rem;
   display: flex;
   border-radius: 1rem;
-  padding: 10px;
 }
 
 .transport-bus,
@@ -131,7 +142,8 @@ h4 {
   justify-content: center;
   align-items: center;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none;  
+  padding: 12px;
   color: inherit;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -141,15 +153,16 @@ h4 {
 .transport-horaire i,
 .transport-velo i {
   color: #ffd700;
-  font-size: 1.2rem; /* Taille de l'icône */
+  margin-right: 10px;
+  font-size: 1.8rem; /* Taille de l'icône */
 }
 
 .transport-bus b,
 .transport-horaire b,
 .transport-velo b {
-  font-size: 0.8rem; /* Taille du texte principal */
-  font-weight: bold; /* Mettre en gras */
-  color: #939393;
+  font-size: 1.3rem; /* Taille du texte principal */
+  font-weight: bold; /* Mettre en gras */  
+  color:  rgb(130, 130, 130);
 }
 
 .transport-bus {
@@ -200,7 +213,7 @@ h4 {
 /* ___________________________ */
 
 .suggéré {
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   margin-top: 3rem;
   margin-bottom: 1rem;
   color: #fff;
@@ -217,7 +230,7 @@ h4 {
   text-decoration: none;
   color: #000; /* Couleur du texte pour les liens */
   display: block;
-  border-bottom: 1px solid #ffd700; /* Bordure inférieure pour séparation */
+  border-bottom: 1px solid #274570; /* Bordure inférieure pour séparation */
   border-radius: 1rem;
   display: flex;
   padding: 10px;
@@ -233,7 +246,7 @@ h4 {
 .recent-bus,
 .recent-station {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   padding: 1rem 0;
 }
 
@@ -241,47 +254,56 @@ h4 {
   display: flex;
   justify-content: space-between;
   padding: 1rem 0;
-  border-bottom: 1px solid #ffd700;
+  border-bottom: 1px solid #274570;
   border-radius: 1rem;
   padding: 1.5rem 0;
 }
 
 .distance-bus,
 .distance-station {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   padding-left: 0.75rem;
   font-weight: bold;
-  color: #ffd700;
+  color: #274570; 
 }
 
 .horaire-bus {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   padding-left: 2rem;
   padding-right: 1rem;
   font-weight: bold;
-  color: #ffd700;
+  color: #274570;
+}
+
+.no-station{
+  padding: 0 1rem;
+  font-size: 1.3rem;
+  text-align: center;  
+  color: #666;
 }
 
 .no-horaire {
   padding-left: 2rem;
-  font-size: 1.3rem;
+  font-size: 1.3rem;  
+  color: #666;
 }
 
 .name-bus,
 .name-station {
-  font-size: 0.91rem;
+  font-size: 1.3rem;
   padding-left: 1.5rem;
   color: #666;
 }
 
-.destination-bus {
+.destination-bus {  
+  padding-left: 1rem;
   padding-right: 2rem;
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: #666;
 }
 
 .ligne-bus {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   font-weight: bold;
   color: #666;
   padding-left: 1.75rem;
@@ -297,7 +319,7 @@ h4 {
 }
 
 .title-bus {
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: #666;
   font-weight: lighter;
   padding-left: 2rem;
@@ -309,6 +331,7 @@ h4 {
 .suggestions-list {
   list-style: none; /* Remove default list styling */
   margin-top: 4rem;
+  font-size: 1.1rem;
   width: 100%;
   position: absolute;
   background-color: #fff;
