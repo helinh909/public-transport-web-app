@@ -7,7 +7,9 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
-
+body {
+  background-color: #274570;
+}
 html {
   font-size: 62.5%;
   box-sizing: border-box;
@@ -20,7 +22,7 @@ html {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 1.3rem 10%;
+  padding: 1.3rem 0;
   background: rgb(15, 40, 90);
   display: flex;
   justify-content: space-between;
@@ -31,13 +33,14 @@ html {
   color: #fff;
   text-decoration: none;
   font-weight: 700;
-  margin: auto 1rem auto 0;
+  margin: auto 1em auto 7em;
 }
 
 .header-title{
   font-size: 2rem;
   color: #fff;  
-  font-weight: 700;
+  font-weight: 700;  
+  margin-right: 2em;
 }
 
 .icons {
@@ -121,6 +124,7 @@ h4 {
 #map {
   height: 100%;
   width: 71%;
+  flex-grow: 1;
 }
 /* transport option */
 .transport-options {
@@ -242,7 +246,7 @@ h4 {
 .recent-bus,
 .recent-station {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   padding: 1rem 0;
 }
 
