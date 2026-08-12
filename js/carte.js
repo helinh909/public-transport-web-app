@@ -510,6 +510,7 @@ function addOffsetToCoordinates(lat, lng, index) {
 //recuperer les donnees des arrets de bus
 
 let stationsName = [];
+window.stationsName = stationsName;
 
 const busImage = new Image();
 busImage.src = "images/bus_icon.png";
@@ -519,31 +520,39 @@ const busIcon = L.icon({iconUrl:busImage.src ,iconSize: [25, 25],});
 
 async function recupererDonneesArretsDeBus() {
   try {
-    const response = await fetch("https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id" );
+    const response = await fetch("https://opendata.agglo-larochelle.fr/d4c/api/records/1.0/search/dataset=transport_yelo___gtfs_stop_des_bus&rows=1550&facet=stop_id");
     if (!response.ok) {
       throw new Error("La réponse du réseau n'est pas valide.");
     }
+
     const busStopsData = await response.json();
     afficherPositionsBus(busStopsData);
 
+    stationsName = [];
     busStopsData.records.forEach((arret) => {
-      const doubleArret = stationsName.findIndex(element => element.name === arret.fields.stop_name);
-      if (doubleArret === -1) {
-        stationsName.push(
-          {stop: arret.fields.stop_id,
-          name: arret.fields.stop_name,
-          latitude: parseFloat(arret.fields.stop_lat.split(",")[0]), //split-> liste separée par des virgules
-          longitude: parseFloat(arret.fields.stop_lon.split(",")[1]), //str to float})
-          }     
-      )}     
-    }) 
+      const stopName = arret.fields.stop_name;
+      const doubleArret = stationsName.findIndex((element) => element.name === stopName);
 
-    //la selection contiendra le nom des stations
+      if (doubleArret === -1) {
+        const stopLat = Number.parseFloat(arret.fields.stop_lat);
+        const stopLon = Number.parseFloat(arret.fields.stop_lon);
+
+        stationsName.push({
+          stop: arret.fields.stop_id,
+          name: stopName,
+          latitude: Number.isFinite(stopLat) ? stopLat : 0,
+          longitude: Number.isFinite(stopLon) ? stopLon : 0,
+        });
+      }
+    });
+
+    window.stationsName = stationsName;
+
     stationsName.forEach((station) => {
-      const option = document.createElement("option");  
-      option.value = station.name;      
+      const option = document.createElement("option");
+      option.value = station.name;
       option.textContent = station.name;
-    });   
+    });
 
     return busStopsData;
   } catch (error) {
@@ -562,11 +571,11 @@ const arrivalSelect = document.getElementById("suggestions-list");
 let selectedSuggestionIndex = -1;
 
 destinationInput.addEventListener("input", function () {
-  const searchTerm = destinationInput.value.toLowerCase();
+  const searchTerm = destinationInput.value.trim().toLowerCase();
   const filteredStations = stationsName.filter((station) =>
     station.name.toLowerCase().startsWith(searchTerm)
   );
-  displaySuggestions(filteredStations);
+  displaySuggestions(filteredStations.slice(0, 8));
 });
 
 destinationInput.addEventListener("keyup", function (event) {
