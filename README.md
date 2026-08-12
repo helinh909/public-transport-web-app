@@ -1,9 +1,52 @@
-# Projet_DD
+# Public Transport Web Application
 
-Descriptif de notre projet: 
+## Project Overview
 
-L’utilisateur, quand il arrive sur l’application web, voit où il se situe. Il peut avoir accès à une carte, où sont situés les différents arrêts de bus et les stations de vélo. En cliquant sur ces arrêts ou ces stations (grâce à des petites icônes), on pourra voir les différentes horaires. Il pourra aussi avoir des informations complémentaires comme le nombre de vélos disponibles. Notre application proposera aussi le temps de trajet pour arriver au moyen de transport qu’il a choisi, mais aussi le temps passé dans celui-ci avant d’arriver à destination. Cette application web sera disponible sur ordinateur mais aussi sur téléphone, pour y avoir accès facilement. 
+This project is a web application designed to help users find and access public transportation information in real time.
 
-Installation et execution du projet:
-Allez sur le gitlab du projet Panda -> "https://gitlab.univ-lr.fr/projets-l2-2023/panda/projet_dd" et télécharger
-le projet, pour avoir accès au site web il faudra ensuite cliquer sur "index.html".
+When users open the application, their current location is displayed on an interactive map. The map shows nearby **bus stops** and **bike-sharing stations**, represented by dedicated icons.
+
+By selecting a bus stop or bike station, users can access relevant information such as:
+
+* Bus schedules
+* Bike availability
+* Transportation station locations
+* Estimated walking time to the selected transportation option
+* Estimated travel time using the selected transportation method
+
+The application is designed to be **responsive**, making it accessible on both desktop computers and mobile devices.
+
+## Features
+
+* Interactive map
+* User location detection
+* Bus stop locations
+* Bike-sharing station locations
+* Real-time transportation information
+* Bus schedules
+* Number of available bikes
+* Estimated walking and travel times
+* Responsive interface for desktop and mobile
+
+## Technologies
+
+* HTML
+* CSS
+* JavaScript
+* Public transportation APIs
+
+## Installation & Usage
+
+Clone the repository:
+
+```bash
+git clone <your-github-repository-url>
+```
+
+Open the project folder and launch `index.html` in a web browser.
+
+Depending on the APIs used by the application, some features may require an internet connection or valid API access.
+
+## Project Context
+
+This project was developed as part of a university project and focused on integrating public transportation data into an interactive web application.
